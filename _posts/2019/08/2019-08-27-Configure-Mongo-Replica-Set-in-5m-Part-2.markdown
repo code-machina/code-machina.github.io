@@ -79,6 +79,8 @@ mongo --host anguis1:27017 <<EOF
 EOF
 ```
 
+{% include advertisements.html %}
+
 ## 실전 구동
 
 우선 [코마의 docker awesome 프로젝트](https://github.com/code-machina/coma-docker-awesome)에 접속하셔서 `star` 를 눌러주세요. 여러분의 추천은 다음을 이어가는 힘이됩니다.
@@ -88,6 +90,8 @@ git clone https://github.com/code-machina/coma-docker-awesome
 ```
 
 폴더로 이동합니다.
+
+{% include advertisements.html %}
 
 ```bash
 cd coma-docker-awesome
@@ -107,9 +111,13 @@ docker-compose -f docker-compose-addauth.yml up
 docker-compose up -d && docker-compose logs -f
 ```
 
+{% include advertisements.html %}
+
 ## 마무리
 
 지금까지 도커 컴포즈를 이용한 초간단 몽고DB 레플리카 셋을 구성하는 방법을 설명드렸습니다. 저는 여러분이 이 글을 통해 복잡한 설정 대신에 빠르게 원하는 스택을 구축하셔서 응용 개발에 집중하는데 도움이 되었으면 합니다. 지금까지 **코마** 였습니다.
+
+{% include advertisements.html %}
 
 구독해주셔서 감사합니다. 더욱 좋은 내용으로 찾아뵙도록 하겠습니다. 감사합니다
 

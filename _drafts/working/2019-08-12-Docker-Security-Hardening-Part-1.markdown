@@ -44,7 +44,7 @@ excerpt_separator: <!--more-->
 
 <!-- @TODO: Docker 컨테이너 탈출 취약점이랑 Docker 보안 하드닝관련 내용을 동시에 작성해야함. -->
 
-- [Docker 컨테이너 탈출 취약점(CVE-2019-5736) 분석 및 테스트배드]({% link _.drafts/2019-08-14-CVE-2019-5736-PoC-With-Vagrant-And-Docker.markdown %})
+<!-- - [Docker 컨테이너 탈출 취약점(CVE-2019-5736) 분석 및 테스트배드]({% link _drafts/working/2019-08-14-CVE-2019-5736-PoC-With-Vagrant-And-Docker.markdown %}) -->
 
 - [CVE-2019-5736 : PoC](https://gist.github.com/bcb079e04c2a3101c422be07a262627c.git)
 - [lxc : commit 내용](https://github.com/lxc/lxc/commit/6400238d08cdf1ca20d49bafb85f4e224348bf9d)

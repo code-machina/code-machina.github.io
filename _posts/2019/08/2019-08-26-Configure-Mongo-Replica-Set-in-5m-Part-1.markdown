@@ -130,7 +130,7 @@ $ tree -f
 
 우선 결론부터 말씀 드리면, 아래와 같이 명령어를 타이핑하시면 모든 구성이 완료됩니다.
 
-1. `docker-compose-init.yml` 파일 구동
+- `docker-compose-init.yml` 파일 구동
 
 위에서 설명하였 듯이 레플리카 셋 설정을 잡아줍니다.
 
@@ -138,7 +138,7 @@ $ tree -f
 docker-compose -f docker-compose-init.yml up
 ```
 
-2. `docker-compose-addauth.yml` 파일 구동
+- `docker-compose-addauth.yml` 파일 구동
 
 레플리카 셋에 접속 계정등의 인증 정보를 등록하고 keyfile 을 생성합니다.
 
@@ -146,7 +146,7 @@ docker-compose -f docker-compose-init.yml up
 docker-compose -f docker-compose-addauth.yml up
 ```
 
-3. 마지막 `docker-compose.yml`
+- 마지막 `docker-compose.yml`
 
 최종 세팅이 완료되었으며 이제 구동하는 단계입니다. `&& docker-compose logs -f` 영역은 부트업 로그 모니터링 용입니다. 부팅이 정상적으로 완료되면 ctrl+c 를 눌러주세요.
 

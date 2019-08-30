@@ -49,6 +49,8 @@ Vue 공식 문서는 아래의 목차를 통해 Vue 를 소개하고 있습니�
     - [Relation to Custom Elements](#relation-to-custom-elements)
   - [Ready for More?](#ready-for-More)
 
+{% include advertisements.html %}
+
 ## What is Vue.js
 
 Vue 는 상당히 진보적인 프레임워크라고 소개하고 있어요. 왜 진보적라고 이들은 주장할까요? 그것은 바로 기존의 단일형(Monolithic) 프레임워크와 비교하였을 때 진보적이라고 표현하는 것입니다. 
@@ -59,6 +61,7 @@ Vue 의 특징은 아래와 같다고 소개하고 있습니다.
 - Vue 의 코어 라이브러리는 View 레이어에 오로지 집중하여 다른 라이브러리와 통합하거나 기존의 프로젝트에 결합하기에 매우 용이
 - Vue 는 SPA(Single-Page-Applications)를 구현하는데 최적화된 라이브러리
 
+{% include advertisements.html %}
 
 ## React 와의 유사성
 
@@ -68,6 +71,7 @@ SPA 를 지원하며 코어 라이브러리에 집중하는 유사한 라이브�
 - 반응성과 구성 용이성(composable)을 갖춘 View 컴포넌트를 제공
 - 핵심 라이브러리에 집중하며 라우팅과 전역 상태 관리는 에코시스템의 라이브러리에 의존
 
+{% include advertisements.html %}
 
 ## Getting Started
 
@@ -86,6 +90,8 @@ SPA 를 지원하며 코어 라이브러리에 집중하는 유사한 라이브�
 <!-- 상용버전, 속도와 용량이 최적화됨. -->
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 ```
+
+{% include advertisements.html %}
 
 ## Declarative Rendering
 
@@ -106,6 +112,8 @@ Vue 는 DOM 과 데이터를 연결하여 모든 것을 반응형으로 만들�
 
 그렇다면 우리는 DOM 에 특수한 반응형 동작을 정의할 때 **디렉티브**라는 것을 사용해야 함을 유추할 수 있습니다.
 
+{% include advertisements.html %}
+
 <!-- https://codepen.io/code-machina/pen/KKPqYry -->
 
 <pre class="codepen" data-height="230" data-type="html,result" data-href="KKPqYry" data-user="code-machina" data-safe="true"></pre><br>
@@ -121,6 +129,8 @@ DOM 에 반응형을 정의할 수 있다고 위에서 언급한 바 있습니�
 
 이제 여러분은 사용자 액션에 따른 선택적 렌더링의 방법을 조건(Conditionals) 디렉티브 `v-if` 를 통해 구현할 수 있음을 알게되었습니다. (참 쉽고 재밌는 Vue 입니다. 😍)
 
+{% include advertisements.html %}
+
 <!-- https://codepen.io/code-machina/pen/MWgoNjv -->
 
 <pre class="codepen" data-height="230" data-type="html,result" data-href="MWgoNjv" data-user="code-machina" data-safe="true"></pre><br>
@@ -131,6 +141,8 @@ DOM 에 반응형을 정의할 수 있다고 위에서 언급한 바 있습니�
 > 단어하나에도 의미를 부여할 경우 무한한 가능성이 열립니다. 여러분들도 코마와 함께 여러분들의 가능성을 넓히는 계기가 되었으면 합니다.
 <br>
 
+{% include advertisements.html %}
+
 <!-- https://codepen.io/code-machina/pen/MWgoNmE -->
 
 <pre class="codepen" data-height="430" data-type="result" data-href="MWgoNmE" data-user="code-machina" data-safe="true"></pre><br>
@@ -140,20 +152,23 @@ DOM 에 반응형을 정의할 수 있다고 위에서 언급한 바 있습니�
 
 Vue 는 사용자가 앱과 상호작용 할 수 있도록 도와줍니다. `v-on` 디렉티브를 사용하면 javascript 함수를 이벤트와 바인당할 수 있어요! 😍 (정말 멋지지 않나요!) HTML 제공하는 사용자 입력 유형은 매우 다양합니다. 그런데, 과연 Vue 가 이 모든 액션을 다 지원하는지는 사실 의문이 드는 점이네요! 나중에 시간을 내어서 알아보도록 할게요. 지금은 사용자 입력 핸들링(Handling User Input)만 집중해주세요!
 
+{% include advertisements.html %}
 
 <!-- https://codepen.io/code-machina/pen/gOYxOPK -->
 
 <pre class="codepen" data-height="330" data-type="result" data-href="gOYxOPK" data-user="code-machina" data-safe="true"></pre><br>
 
-# 마무리
+## 마무리
 
 벌써 Vue.js 공식 문서 정복(뽀개기) 과정에서 Introduction 영역의 70%를 완료하였네요!👏 (짝짝짝) 아직 드릴 이야기가 무궁무진하니 좀 더 지켜봐주시면 더욱 감사할 것 같아요! 여러분이 Vue.js 를 장난감처럼 가지고 노는 그날까지 저 **코마**는 멈추지 않겠습니다. 대한민국 IT인 여러분들의 건승을 기원합니다.
+
+{% include advertisements.html %}
 
 지금까지 **코마** 였습니다.
 
 구독해주셔서 감사합니다. 더욱 좋은 내용으로 찾아뵙도록 하겠습니다. 감사합니다
 
-# 링크 정리
+## 링크 정리
 
 이번 시간에 참조한 링크는 아래와 같습니다. 잘 정리하셔서 필요할 때 사용하시길 바랍니다.
 

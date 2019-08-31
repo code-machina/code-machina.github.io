@@ -64,6 +64,11 @@ Vue.js 가 제공하는 컴포넌트 시스템은 큰 규모의 어플리케이�
 <script src="https://gist.github.com/code-machina/5f4393dcefd60aca09cd83ea45d3dbd3.js"></script>
 
 
+{% include advertisements.html %}
+
+<br>
+
+
 이제 여러분들도 코마처럼 아래의 예제를 통해서 컴포넌트를 자유자재로 다룰 수 있어요! 🙋
 `Vue.component` 구문을 통해서 새로운 컴포넌트를 정의하고 사용해 볼까요?
 
@@ -76,7 +81,11 @@ Vue.component('todo-item', {
 })
 ```
 
-> ℹ  **TIP**: `ol` 은 `ordered list` 의 줄임말(acronym)입니다. 반대로 `ul` 은 `un-ordered list` 를 말합니다. 즉, 순서가 있는 목록, 순서가 필요없는 목록을 나타낼 때 사용합니다.
+> ℹ  **TIP**: **ol** 은 **ordered list** 의 줄임말(acronym)입니다. 반대로 **ul** 은 **un-ordered list** 를 말합니다. 즉, 순서가 있는 목록, 순서가 필요없는 목록을 나타낼 때 사용합니다.
+
+<br>
+{% include advertisements.html %}
+<br>
 
 우리는 위에서 정의한 `todo-item` 컴포넌트를 마치 원래 있었던 element 처럼 사용할 수 있습니다. 어때요 멋지지 않은가요? 사용자 정의 클래스를 선언하고 사용하는 방식처럼 느껴집니다. 
 
@@ -109,17 +118,26 @@ W3 콘소시움을 아나요? 웹 표준을 정의하는 기관입니다. 아마
 
 하지만, 아직은 `Web Components Spec` 은 초안단계에 머물러 있습니다. 그러나 Vue 컴포넌트는 모든 브라우저에서 지원됩니다. 더불어 Vue 컴포넌트는 데이터 흐름, 사용자 지정 이벤트 통신 및 빌드 도구 통합 등을 활용할 수 있기에 더욱더 의미가 큽니다.
 
+<br>
+{% include advertisements.html %}
+<br>
 
 ## Ready for More?
 
 지금까지 여러분은 Vue 의 기본 기능을 모두 이해하게 되었습니다. 어떤까요? 멋지고 새롭지 않나요? 여러분들의 머리속에서 Vue 를 활용하여 새로운 서비스를 구현할 계획을 그리고 있다면 코마의 바램이 이루어진 것이네요!
+
+<br>
+{% include advertisements.html %}
+<br>
 
 
 ## 마무리
 
 드디어 Vue.js 공식 문서 정복(뽀개기) 과정에서 Introduction 영역이 완료되었습니다! 👏 (짝짝짝) 이 과정은 모든 문서를 정복할 때까지 매일 매일 업로드 하도록 할테니 내일 이 시간에도 시간을 내어 [코마의 훈훈한 블로그](https://code-machina.github.io) 를 찾아주세요!
 
+<br>
 {% include advertisements.html %}
+<br>
 
 다음 시간에는 `Vue 인스턴스` 와 `템플릿 문법`을 완벽하게 이해하실 수 있도록 정리해보도록 하겠습니다.
 
@@ -134,3 +152,7 @@ W3 콘소시움을 아나요? 웹 표준을 정의하는 기관입니다. 아마
 이번 시간에 참조한 링크는 아래와 같습니다. 잘 정리하셔서 필요할 때 사용하시길 바랍니다.
 
 - [Vue.js 2.x : Guide Docs](https://vuejs.org/v2/guide/index.html)
+
+<br>
+{% include advertisements.html %}
+<br>

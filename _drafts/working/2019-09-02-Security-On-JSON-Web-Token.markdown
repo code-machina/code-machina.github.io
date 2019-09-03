@@ -324,9 +324,142 @@ public class TokenRevoker {
 
 ### 어떻게 방어할 것인가?
 
-보호의 방법은 동기 알고리즘을 이용하여 토큰을 암호화하는 것이다. 그러나 이러한 공격 유형에는 Padding Oracle 이 있다. 보안 목적을 모두 달성하기 위해서는 AES-GCM 알고리즘을 사용한다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주시길 바랍니다. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
+보호의 방법은 동기 알고리즘을 이용하여 토큰을 암호화하는 것입니다. 그러나 이러한 공격 유형에는 Padding Oracle 이 있다. 보안 목적을 모두 달성하기 위해서는 AES-GCM 알고리즘을 사용합니다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주시길 바랍니다. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
 
 - [Jupyter Notebook을 이용한 Padding Oracle 완전 분석](https://github.com/code-machina/TheoremToReal/blob/master/Padding-Oracle-Attack.ipynb)
+
+암호화는 내부 정보를 감추는 수단으로 사용됩니다. 그러나 JWT 토큰을 변조하는데 있어 첫번째 방어 수단은 시그니처(signature)입니다. 토큰 시그니처(signature)와 유효성 검증(verification)은 언제나 준비되어 있어야 합니다.
+
+### 구현 샘플
+
+- 토큰 암호화
+    - `Google Tink` 는 암호 라이브러리입니다. 암호화 작업을 처리할 때 사용합니다.
+    - google Tink 라이브러리에서 `Primitives` 는 암호 작업을 말합니다. 
+        - `Aead aead = AeadFactory.getPrimitive(keysetHandle);` 와 같이 사용됩니다.
+        - 구글은 primitives 를 가리켜 `cryptographic tasks` 라고 표현합니다. [key,keyset and keysethandle](https://github.com/google/tink/blob/master/docs/KEY-MANAGEMENT.md#key-keyset-and-keysethandle)
+        - 여기서 Primitives 란 원초라는 의미로 해석이됩니다.
+        - 또한 프로그래밍 언어에서 Primitive Data Type 가 있죠, int, string 등 기본 제공 타입들입니다. 
+        - 즉, 암호화에 있어서 원초적이고 기본이되는 것은 암호화 스펙입니다. 따라서, Primitive 라는 단어를 사용한 것이 아닌가 하는 생각이 드네요. (추측이지만, 저는 확신합니다 👓🚦)
+
+- Tink 를 활용한 대칭키 알고리즘(Symmetric Algorithm) 구현 예입니다.
+
+```java
+import com.google.crypto.tink.DeterministicAead;
+import com.google.crypto.tink.KeysetHandle;
+import com.google.crypto.tink.daead.DeterministicAeadKeyTemplates;
+
+// 1. keyset 을 생성합니다. (대칭키로 생성)
+KeysetHandle keysetHandle = KeysetHandle.generateNew(
+    DeterministicAeadKeyTemplates.AES256_SIV);
+
+// 2. Primitives 를 생성합니다.
+DeterministicAead daead =
+    keysetHandle.getPrimitive(DeterministicAead.class);
+
+// 3-1. Primitive 를 이용해 평문(Plain text)을 암호화 합니다.
+byte[] ciphertext = daead.encryptDeterministically(plaintext, aad);
+
+// 3-2. 암호문을 복호화합니다.
+byte[] decrypted = daead.decryptDeterministically(ciphertext, aad);
+```
+
+- Deterministic AEAD Primitive 란
+
+바로 전에 소스코드를 본다면 분명 Deterministic 이라는 단어가 자주 등작하는 것을 알 수 있습니다. [Deterministic Authenticated Encryption with Associated Data](https://github.com/google/tink/blob/master/docs/PRIMITIVES.md#deterministic-authenticated-encryption-with-associated-data) 문서를 살펴보면 그 의미를 명확히 챙겨가실수 있습니다. 
+
+좀더 상술하자면 Deterministic AEAD 는 DAEAD 라고 줄여 쓰며, 그 의미는 명확합니다. 아래의 문구를 보시죠.
+
+**동일한 데이터를 암호화 한다면 항상 동일한 암호문을 출력한다. (Encrypting the same data always yields the same ciphertext)** 그리고 암호화된 데이터를 탐색하는 스키마나 키를 랩핑하는 용도에 유용하니다.
+
+> AEAD 는 **A**uthenticated **E**ncryption with **A**ssociated **D**ata 의 약자입니다. 
+
+
+- AES-GCM 을 이용한 토큰 암호화 
+
+
+```java
+/**
+ * AES-GCM을 이용하여 토큰의 암호화와 복호화를 처리합니다.
+ *
+ * @see "https://github.com/google/tink/blob/master/docs/JAVA-HOWTO.md"
+ */
+public class TokenCipher {
+
+    /**
+     * 생성자 - AEAD 설정을 등록합니다.
+     *
+     * @throws Exception AEAD 설정 등록 과정에 문제가 발생할 경우 예외 전달
+     */
+    public TokenCipher() throws Exception {
+        AeadConfig.register();
+    }
+
+    /**
+     * JWT를 암호화
+     *
+     * @param jwt          암호화할 토큰
+     * @param keysetHandle keyset 핸들러에 대한 레퍼런스(포인터)
+     * @return HEX로 인코딩된 토큰의 암호 문자열
+     * @throws Exception 토큰 암호화 작업 동안 이슈 발생 시 에외 전달
+     */
+    public String cipherToken(String jwt, KeysetHandle keysetHandle) throws Exception {
+        // 파라미터 유효성 검증
+        if (jwt == null || jwt.isEmpty() || keysetHandle == null) {
+            throw new IllegalArgumentException("Both parameters must be specified !");
+        }
+
+        // AEAD 팩토리를 통해 Primitive 를 반환
+        Aead aead = AeadFactory.getPrimitive(keysetHandle);
+
+        //Cipher the token
+        byte[] cipheredToken = aead.encrypt(jwt.getBytes(), null);
+
+        return DatatypeConverter.printHexBinary(cipheredToken);
+    }
+
+    /**
+     * JWT 를 복호화 합니다.
+     *
+     * @param jwtInHex     헥스로 인코딩된 암호화 토큰 데이터
+     * @param keysetHandle Keyset 핸들에 대한 레퍼런스(포인터)
+     * @return  평문으로 변환된 토큰
+     * @throws Exception 복호화 과정에서 에러 발생 시 에외를 반환(throw)
+     */
+    public String decipherToken(String jwtInHex, KeysetHandle keysetHandle) throws Exception {
+        // 파라미터 검증
+        if (jwtInHex == null || jwtInHex.isEmpty() || keysetHandle == null) {
+            throw new IllegalArgumentException("Both parameters must be specified !");
+        }
+
+        // 암호화 토큰을 디코딩 (=> byte array)
+        byte[] cipheredToken = DatatypeConverter.parseHexBinary(jwtInHex);
+
+        // Primitive 를 반환
+        Aead aead = AeadFactory.getPrimitive(keysetHandle);
+
+        // 토큰을 복호화
+        byte[] decipheredToken = aead.decrypt(cipheredToken, null);
+
+        // 복호화된 토큰을 반환
+        return new String(decipheredToken);
+    }
+}
+```
+
+- 암호 토큰 생성 및 검증
+
+```java
+//Load keys from configuration text/json files in order to avoid to store keys as String in JVM memory
+private transient byte[] keyHMAC = Files.readAllBytes(Paths.get("src", "main", "conf", "key-hmac.txt"));
+private transient KeysetHandle keyCiphering = CleartextKeysetHandle.read(JsonKeysetReader.withFile(
+Paths.get("src", "main", "conf", "key-ciphering.json").toFile()));
+
+...
+
+//Init token ciphering handler
+TokenCipher tokenCipher = new TokenCipher();
+```
+
 
 
 ## 마무리

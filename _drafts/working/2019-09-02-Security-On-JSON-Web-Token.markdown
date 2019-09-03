@@ -320,13 +320,15 @@ public class TokenRevoker {
 
 ## 토큰 정보 노출
 
-공격자가 토큰에 접근하여 정보를 추출하는 방식이다. 이는 시스템에 대한 정보르르 얻기 위한 방법이다. 정보의 예는 보안 권한, 로그인 유형 등이 있다.
+공격자가 토큰에 접근하여 정보를 추출하는 방식이다. 이는 시스템에 대한 정보를 얻기 위한 방법입니다. 정보의 예는 보안 권한, 로그인 유형 등이 있습니다.
 
-### 어떻게 방어할 것인가?
+### 예방 방법
 
-보호의 방법은 동기 알고리즘을 이용하여 토큰을 암호화하는 것이다. 그러나 이러한 공격 유형에는 Padding Oracle 이 있다. 보안 목적을 모두 달성하기 위해서는 AES-GCM 알고리즘을 사용한다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주시길 바랍니다. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
+보호의 방법은 동기 알고리즘을 이용하여 토큰을 암호화하는 것이다. 그러나 이러한 공격 유형에는 Padding Oracle 이 있다. 보안 목적을 모두 달성하기 위해서는 AES-GCM([Galois/Counter Mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode)) 알고리즘을 사용합니다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주세요. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
 
 - [Jupyter Notebook을 이용한 Padding Oracle 완전 분석](https://github.com/code-machina/TheoremToReal/blob/master/Padding-Oracle-Attack.ipynb)
+
+
 
 
 ## 마무리

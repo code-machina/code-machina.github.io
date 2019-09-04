@@ -36,7 +36,7 @@ JWT 는 주로 신원(identity) 정보와 클라이언트의 요청과 관련된
 
 JWT.IO 에 따르면 토큰은 아래의 구조를 갖추고 있습니다. 크게 3개의 파트로 분리됩니다. 또한, 전송을 위해 base64를 통해서 인코딩하여 전송 용이성을 높였습니다.
 
-`[Base64(HEADER)].[Base64(PAYLOAD)].[Base64(SIGNATURE)]
+`[Base64(HEADER)].[Base64(PAYLOAD)].[Base64(SIGNATURE)]`
 
 - 헤더 영역(HEADER)
 
@@ -124,11 +124,11 @@ DecodedJWT decodedToken = verifier.verify(token)
 
 아래는 위에서 JWT 를 보호하기 위한 HTTP 헤더 플래그를 설명한 내용입니다. (이 부분은 매우 중요하며 면접에도 자주 나오는 단골 개념들이니 꼭 유념하시길 바랍니다.)
 
-> Secure 쿠키는 HTTPS 프로토콜을 통한 암호 요청만을 통해서 전송할 수 있습니다. 예를들어 http 통신을 하는 안전하지 않은 사이트는 Secure 디렉티브로 설정된 쿠키를 구울 수 없습니다.
+> `Secure` 쿠키는 `HTTPS 프로토콜을 통한 암호 요청만을 통해서 전송`할 수 있습니다. 예를들어 http 통신을 하는 안전하지 않은 사이트는 Secure 디렉티브로 설정된 쿠키를 구울 수 없습니다.
 
-> HttpOnly 쿠키는 자바 스크립트의 Document.cookie API를 통해 접근이 불가합니다. 이들은 오로지 서버로만 전송됩니다. 예를 들어 server-side 세션은 Javascript가 접근할 필요가 없습니다. 따라서 HttpOnly 플래그가 반드시 설정되어야 합니다.
+> `HttpOnly` 쿠키는 자바 스크립트의 `Document.cookie` API를 통해 접근이 불가합니다. 이들은 오로지 서버로만 전송됩니다. 예를 들어 server-side 세션은 Javascript가 접근할 필요가 없습니다. 따라서 HttpOnly 플래그가 반드시 설정되어야 합니다.
 
-> SameSite 쿠키는 서버로 하여금 쿠키가 교차 도메인 전송이 차단합니다. CSRF 에 대해 보안을 제공합니다. SameSite 쿠키는 상대적으로 신규 플래그이며 모든 주요 브라우저에 의해서 지원되는 사항입니다.
+> SameSite 쿠키는 서버로 하여금 쿠키가 `교차 도메인 전송`이 차단합니다. CSRF 에 대해 보안을 제공합니다. SameSite 쿠키는 상대적으로 신규 플래그이며 모든 주요 브라우저에 의해서 지원되는 사항입니다.
 
 > 쿠키 Prefixes 는 브라우저에게 특정 속성(attribute, like Secure etc.)이 필요하다고 이야기하는 역할을 합니다. `__Secure-`이 대표적인 예입니다. 만약 `__Host-` Prefix 가 설정된 경우 `Path=/` 와 `Secure` 속성이 모두 필요함을 브라우저에게 알려줍니다. 
 
@@ -136,15 +136,13 @@ IP 주소는 IP 주소의 변경 이슈로 인해 사용할 수 없습니다. �
 
 토큰 유효성 검증 동안, 수신된 토큰이 올바른 컨텍스트를 포함하지 못한다면 다시 요청을 수신하도록 하거나 서버로 부터 거절되는 구현을 선택해야 합니다.
 
-아래는 
-
 ```java
 // 위와 동
 private transient byte[] keyHMAC = ...;
 // 임의의 데이터 생성
 private SecureRandom secureRandom = new SecureRandom();
 
-...java
+...
 
 // 임의의 문자열을 생성 이 사용자를 위한 핑거프린트로 사용될 예정입니다
 byte[] randomFgp = new byte[50];
@@ -324,11 +322,8 @@ public class TokenRevoker {
 
 ### 예방 방법
 
-<<<<<<< HEAD
 보호의 방법은 동기 알고리즘을 이용하여 토큰을 암호화하는 것이다. 그러나 이러한 공격 유형에는 Padding Oracle 이 있다. 보안 목적을 모두 달성하기 위해서는 AES-GCM([Galois/Counter Mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode)) 알고리즘을 사용합니다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주세요. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
-=======
 보호의 방법은 동기 알고리즘을 이용하여 토큰을 암호화하는 것입니다. 그러나 이러한 공격 유형에는 Padding Oracle 이 있다. 보안 목적을 모두 달성하기 위해서는 AES-GCM 알고리즘을 사용합니다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주시길 바랍니다. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
->>>>>>> 6a51d676b93fd5132f0bdd3b5c4dbd5cb169aaec
 
 - [Jupyter Notebook을 이용한 Padding Oracle 완전 분석](https://github.com/code-machina/TheoremToReal/blob/master/Padding-Oracle-Attack.ipynb)
 
@@ -453,20 +448,165 @@ public class TokenCipher {
 - 암호 토큰 생성 및 검증
 
 ```java
-//Load keys from configuration text/json files in order to avoid to store keys as String in JVM memory
+
+// JVM 메모리 내에서 문자열을 키로써 저장하는 것을 피하기 위해 text/json 파일들을 이용한 설정 파일로부터 키를 로드한다.
 private transient byte[] keyHMAC = Files.readAllBytes(Paths.get("src", "main", "conf", "key-hmac.txt"));
 private transient KeysetHandle keyCiphering = CleartextKeysetHandle.read(JsonKeysetReader.withFile(
 Paths.get("src", "main", "conf", "key-ciphering.json").toFile()));
 
 ...
 
-//Init token ciphering handler
+// 토큰 암호화 핸들러
 TokenCipher tokenCipher = new TokenCipher();
 ```
 
+- 토큰 생성
+
+```java
+// JWT API 를 이용하여 JWT 토큰을 생성
+// 토큰을 암호화 (JSON 문자열 표현)
+String cipheredToken = tokenCipher.cipherToken(token, this.keyCiphering);
+// HEX 로 인코딩한 암호화 문자열을 클라이언트에게 HTTP 응답을 통해 전송한다.
+```
+
+- 토큰 유효성 검증
+
+```java
+// HEX 로 인코딩된 암호화된 토큰을 가져온다.
+// 토큰을 복호화한다.
+String token = tokenCipher.decipherToken(cipheredToken, this.keyCiphering);
+// 접근권한 검증
+// JWT API 를 사용하여 토큰 유효성 검증
+```
+
+## 클라이언트 기반의 토큰 저장소
+
+- 브라우저를 이용한 자동 전송 (Cookie 스토리지)
+- 브라우저가 재시작할지라도 쿠키 자동 전송 (localStorage 컨테이너를 사용)
+- XSS 이슈에 대해 
+
+### 예방 방법
+
+1. sessionStorage 컨테이너를 사용하여 토큰을 보관
+2. 서비스 호출 시 Javascript 를 이용하여 Bearer를 추가
+3. 토큰 상에 핑거프린트 정보를 추가
+
+## 토큰 하이재킹
+
+이 공격은 토큰이 인터셉트되거나 도난을 당하였을 때, 유저의 컨텍스트 정보를 토큰에 추가하는 방법이 있습니다. 목표로하는 사용자 신원정보를 사용하여 시스템에 접속 권한을 얻는 위협입니다.
+
+### 방어 방법
+
+보호 방법은 사용자 컨텍스트를 토큰에 추가하는 것입니다. 사용자 컨텍스트는 다음의 정보로 구성됩니다. 
+
+- 임의의 문자열 (인증 과정에서 생성되며 토큰 내에 포함되어야 합니다. 그리고 전송 시에는 보안이 강화된 쿠키 플래그를 통해 전송됩니다.)
+- 임의 문자열의 SHA256 해시는 토큰 내에 저장합니다,. XSS 이슈 발생 시 임의의 문자열 값을 읽어들이고 예상되는 쿠키 정보를 설정하는 시도를 방어할 수 있습니다.
 
 
+```javascript
+  // JWT 토큰을 위한 요청을 처리하고 로컬 스토리지를 위한 요청을 처리
+ function getToken(){
+     var login = $("#login").val();
+     var postData = "login=" + encodeURIComponent(login) + "&password=test";
 
+     $.post("/services/authenticate", postData,function (data){
+         if(data.status == "Authentication successful !"){
+             ...
+             sessionStorage.setItem("token", data.token);
+         }else{
+             ...
+             sessionStorage.removeItem("token");
+         }
+     })
+     .fail(function(jqXHR, textStatus, error){
+             ...
+         sessionStorage.removeItem("token");
+     });
+ }
+```
+
+```javascript
+// JWT 토큰 유효성 검증을 위한 요청을 처리
+ function validateToken(){
+     // sessionStorage 접근
+     var token = sessionStorage.getItem("token");
+
+     if(token == undefined || token == ""){
+         $("#infoZone").removeClass();
+         $("#infoZone").addClass("alert alert-warning");
+         $("#infoZone").text("Obtain a JWT token first :)");
+         return;
+     }
+
+     $.ajax({
+         url: "/services/validate",
+         type: "POST",
+         beforeSend: function(xhr) {
+             // Bearer 를 통해서 전송
+             xhr.setRequestHeader("Authorization", "bearer " + token);
+         },
+         success: function(data) {
+           ...
+         },
+         error: function(jqXHR, textStatus, error) {
+           ...
+         },
+     });
+ }
+```
+
+## 토큰의 약한 암호화 키(secret)
+
+secret 이 HMAC SHA256 알고리즘에 사용되고 이 해시 값이 token 시그니처에 사용되는 경우 만약 secret 이 취약하다면 bruteforcing 의 위험에 노출될 수 있다.
+
+- [HMAC Secret의 브루트포스 공격 예시](https://www.notsosecure.com/crafting-way-json-web-tokens/)
+
+### 예방 방법
+
+screte 의 강도(strength)를 높이는 방법으로 Alphanumeric + special characters 를 조합한다.
+
+```
+A&'/}Z57M(2hNg=;LE?~]YtRMS5(yZ<vcZTA3N-($>2j:ZeX-BGftaVk`)jKP~q?,jk)EMbgt*kW'(
+```
+
+
+```java
+ /**
+ * 
+ * 토큰을 서명하는데 사용된 secret 과 secret 을 매칭하는 것을 테스트
+ *
+ * @param token JWT 토큰
+ * @param secret 테스트할 secret
+ * @return null 을 리턴하거나 디코딩된 토큰을 리턴
+ */
+private DecodedJWT checkSecret(String token, String secret) {
+     DecodedJWT t = null;
+     try {
+         Algorithm algorithm = Algorithm.HMAC256(secret);
+         JWTVerifier verifier = JWT.require(algorithm).build();
+         t = verifier.verify(token);
+     } catch (JWTVerificationException | UnsupportedEncodingException e) {
+         // 에러 발생 시 무시하고 null 을 반환
+     }
+     return t;
+ }
+```
+
+- secret 딕셔너리를 테스트 기반으로 토큰을 평가하는 코드 스닛핏
+
+```java
+final String tokenTestBase = ...;
+final String[] secret = new String[1];
+final DecodedJWT[] decodedToken = new DecodedJWT[1];
+List<String> secrets = Files.readAllLines(Paths.get("secrets-dictionary.txt"));
+secrets.parallelStream().forEach(s -> {
+ DecodedJWT tentative = checkSecret(tokenTestBase, s);
+ if (tentative != null) {
+   secret[0] = s;
+   decodedToken[0] = tentative;
+ }
+});
+```
 
 ## 마무리
 

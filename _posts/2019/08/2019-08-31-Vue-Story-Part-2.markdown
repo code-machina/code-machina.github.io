@@ -153,6 +153,3 @@ W3 콘소시움을 아나요? 웹 표준을 정의하는 기관입니다. 아마
 
 - [Vue.js 2.x : Guide Docs](https://vuejs.org/v2/guide/index.html)
 
-<br>
-{% include advertisements.html %}
-<br>

@@ -6,11 +6,11 @@
 // 19.08.01 : Post 내 code highlighter 의 배경 색을 변경
 // 영향받는 범위 (클래스) : .highlighter-rouge .highlight 
 // 영향받는 범위 (태그) : pre code 
-.highlighter-rouge .highlight {
-  background: #F2F2F2;
-  border-radius: 5px;
-  box-shadow: 1px 1px grey;
-}
+// .highlighter-rouge .highlight {
+//   background: #F2F2F2;
+//   border-radius: 5px;
+//   box-shadow: 1px 1px grey;
+// }
 
 header {
   z-index: 1200;
@@ -21,10 +21,10 @@ body, button, input, textarea {
 }
 
 code, pre {
-  font-family: "Source Code Pro","Inconsolata",monospace;
-  // 폰트 굵기 조정 600 -> 550
-  font-weight: 200;
-  font-size: 12px;
+  font-family: "Source Code Pro","Roboto","Open Sans",Arial,sans-serif;
+//   // 폰트 굵기 조정 600 -> 550
+//   font-weight: 200;
+//   font-size: 12px;
 }
 
 // Nesting SASS, https://marksheet.io/sass-nesting.html
@@ -111,7 +111,7 @@ code, pre {
 }
 
 pre, code {
-  background-color: #F2F2F2;
+  // background-color: #F2F2F2;
 }
 
 h1.cm-cover-title {

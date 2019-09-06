@@ -1,14 +1,14 @@
 ---
 layout: post
 title:  "JSON 웹 토큰(JWT) 보안"
-subtitle: "웹 인증 키 관리"
+subtitle: "JWT 보안 하드닝 방안"
 author: "코마 (gbkim1988@gmail.com)"
 date:   2019-09-02 00:00:00 +0900
-categories: [ "docker", "security", "hardening"]
+categories: [ "jwt", "token", "hardening"]
 excerpt_separator: <!--more-->
 ---
 
-안녕하세요 **코마**입니다. JSON Web 토큰 보안을 주제로하여 자세히 내용을 설명해 드리겠습니다. 😺
+안녕하세요 **코마**입니다. JSON Web 토큰 보안을 주제로하여 자세히 내용을 설명해 드리겠습니다. 내용이 조금 길수 있으니 마음을 단단히 해주시길 바랍니다. 😺
 
 <!--more-->
 
@@ -618,5 +618,5 @@ secrets.parallelStream().forEach(s -> {
 
 이번 시간에 참조한 링크는 아래와 같습니다. 잘 정리하셔서 필요할 때 사용하시길 바랍니다.
 
-- https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/JSON_Web_Token_Cheat_Sheet_for_Java.md
+- [OWASP: JWT for Java](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/JSON_Web_Token_Cheat_Sheet_for_Java.md)
 

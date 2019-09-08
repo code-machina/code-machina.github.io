@@ -1,14 +1,14 @@
 ---
 layout: post
-title:  "Docker 보안 강화 Part 1"
-subtitle: "Docker Security Hardening Part-1"
+title:  "Docker 보안 하드닝"
+subtitle: "Docker Security Hardening"
 author: "코마 (gbkim1988@gmail.com)"
-date:   2019-08-12 00:00:00 +0900
+date:   2019-09-03 00:00:00 +0900
 categories: [ "docker", "security", "hardening"]
 excerpt_separator: <!--more-->
 ---
 
-안녕하세요 **코마**입니다. 오늘은 Docker 보안 강화에 대해서 알아보도록 하겠습니다. 😺
+안녕하세요 **코마**입니다. 오늘은 Docker 보안 하드닝(Hardening)에 대해서 알아보도록 하겠습니다. 😺
 
 <!--more-->
 
@@ -18,12 +18,13 @@ excerpt_separator: <!--more-->
 
 {% include advertisements.html %}
 
-## 소개 방식
+<!-- ## 소개 방식
 
 보안에는 항상 우려 사항(concern)이라는 것이 문두에 오게됩니다. 만약 ~ 하면 ~ 해질 위험이 있다고 보통 표현하게됩니다. 이는 보안이 항상 임의의 나쁜 행위자가 있음을 염두하기 때문에 나타나는 사고 방식입니다.
 
-그리고 이러한 사고방식은 보안 상의 위험을 미리 예측하고 기민하게 대응하도록 도와줍니다. 따라서, 저 코마는 이 사고 방식에 따라 **발생할 위험에 대해 Docker 보안 강화 방안을 설명드리고자 합니다.**
+그리고 이러한 사고방식은 보안 상의 위험을 미리 예측하고 기민하게 대응하도록 도와줍니다. 따라서, 저 코마는 이 사고 방식에 따라 **발생할 위험에 대해 Docker 보안 강화 방안을 설명드리고자 합니다.** -->
 
+<!-- 
 ## 컨테이너 탈출 위험
 
 영어를 그대로 옮겨 적다보니 표현이 조금 어색합니다. 그러나 말하고자 하는 바는 명확합니다. 컨테이너를 탈출하여 호스트 머신에 접근하는 행위는 대표적인 위험에 속합니다. 이것은 알려진 방식과 알려지지 않은 방식으로 나눌 수 있는데요.
@@ -40,28 +41,32 @@ excerpt_separator: <!--more-->
 
 이글을 쓰는 시점에서 최신 이슈를 살펴보니, 역시 발표된 취약점이 있습니다. 공개된 취약점 식별 번호는 `CVE-2019-5736` 입니다.
 
-아래의 경로에 **CVE-2019-5736 PoC with Vagrant, Docker** 을 참조하시면 정확한 테스트 방법이 있으므로 이를 참조하시면 좋을 것 같습니다.
+아래의 경로에 **CVE-2019-5736 PoC with Vagrant, Docker** 을 참조하시면 정확한 테스트 방법이 있으므로 이를 참조하시면 좋을 것 같습니다. -->
 
 <!-- @TODO: Docker 컨테이너 탈출 취약점이랑 Docker 보안 하드닝관련 내용을 동시에 작성해야함. -->
 
 <!-- - [Docker 컨테이너 탈출 취약점(CVE-2019-5736) 분석 및 테스트배드]({% link _drafts/working/2019-08-14-CVE-2019-5736-PoC-With-Vagrant-And-Docker.markdown %}) -->
 
-- [CVE-2019-5736 : PoC](https://gist.github.com/bcb079e04c2a3101c422be07a262627c.git)
-- [lxc : commit 내용](https://github.com/lxc/lxc/commit/6400238d08cdf1ca20d49bafb85f4e224348bf9d)
+<!-- - [CVE-2019-5736 : PoC](https://gist.github.com/bcb079e04c2a3101c422be07a262627c.git)
+- [lxc : commit 내용](https://github.com/lxc/lxc/commit/6400238d08cdf1ca20d49bafb85f4e224348bf9d) -->
 
-## 취약점 테스트
+<!-- ## 취약점 테스트
 
-리눅스 가상 머신을 생성하고 Provisioning 시에 docker-ce 중에 버전이 낮은 것을 설치해 보겠습니다. 그리고 취약점 코드가 어떻게 동작하는지 살펴보겠습니다.
+리눅스 가상 머신을 생성하고 Provisioning 시에 docker-ce 중에 버전이 낮은 것을 설치해 보겠습니다. 그리고 취약점 코드가 어떻게 동작하는지 살펴보겠습니다. -->
 
-## 도커 보안 가이드
+## 규칙 #0. 최신 버전 업데이트
 
-### 규칙 #0. 최신 버전 업데이트
+도커를 항상 최신 버전으로 업데이트하는 것을 고려해야 합니다. 최근 도커 최신 버전에서 권한 상승 취약점이 발생되었습니다. 해커가 도커 컨테이너 내에 접근할 경우 이 취약점을 이용하여 호스트 머신의 root 권한을 탈취할 수 있습니다.
 
-### 규칙 #1. 도커 데몬 소켓을 노출하지 않기
+## 규칙 #1. 도커 데몬 소켓을 노출하지 않기
 
 `/var/run/docker.sock` 은 UNIX 소켓입니다. 이 소켓을 통해서 도커는 통신을 합니다. 그리고 이 파일은 도커 API 의 진입점입니다.
 
 소켓 파일의 소유주는 root 입니다. 만약 이 파일에 대한 접근 권한을 가지게 된다면 여러분의 호스트에 대한 루트 접근이 가능함을 의미합니다.
+
+<br>
+{% include advertisements.html %}
+<br>
 
 - 도커 데몬을 구동할 때 TCP 도커 데몬 소켓을 사용하지 않습니다. 즉,  `-H tcp://0.0.0.0:XXX` 를 설정하지 않음을 의미합니다.
 - `/var/run/docker.sock` 파일을 다른 컨테이너에 노출하지 않습니다. 만약 여러분이 `-v /var/run/docker.sock:/var/run/docker.sock` 과 같이 볼륨 바인딩을 건다면 권한 탈취의 가능성이 있습니다. 또한, Read-Only 를 설정하더라도 완벽한 방어 방법이 아닙니다.
@@ -71,9 +76,9 @@ volumes:
   - "/var/run/docker.sock:/var/run/docker.sock"
 ```
 
-### 규칙 #2. 사용자 설정
+## 규칙 #2. 사용자 설정
 
-docker 컨테이너 설정 시 권한이 없는 사용자 사용하도록 한다. 이를 통해 권한 상승 공격에 방어가 가능하다.
+docker 컨테이너 설정 시 권한이 없는 사용자 사용하도록 한다. 이를 통해 권한 상승 공격에 방어가 가능합니다.
 
 1. docker run 명령에서는 -u 옵션을 사용
 
@@ -90,9 +95,13 @@ RUN groupadd -r myuser && useradd -r -g myuser myuser
 USER myuser
 ```
 
+<br>
+{% include advertisements.html %}
+<br>
+
 3. `--userns-remap=default` 설정을 통해서 namespace 지원을 활성화
 
-리눅스 네임스페이스(namespace) 설정은 실행 중인 프로세스들을 서로 독립 시킬 수 있다. 그리고 시스템 리소스에 접근 제한을 부여할 수 있으며 이 과정에서 실행 프로세스들은 이러한 제한을 인지할 수 없습니다.
+리눅스 네임스페이스(namespace) 설정은 실행 중인 프로세스들을 서로 독립 시킬 수 있습니다. 그리고 시스템 리소스에 접근 제한을 부여할 수 있으며 이 과정에서 실행 프로세스들은 이러한 제한을 인지할 수 없습니다.
 
 도커 공식 문서는 컨테이너 내에서 권한 상승 공격을 예방하는 최선의 방법으로 root 권한이 아닌 사용자의 권한으로 어플레케이션 컨테이너를 실행시키도록 제시하고 있습니다.
 
@@ -110,7 +119,7 @@ $ grep dockremap /etc/subuid
 dockremap:231072:65536
 ```
 
-namespace 설정을 통해 폴더 자체는 root 이지만 하위 생성된 파일들의 권한은 root 가 아닌 것을 알 수 있다.
+namespace 설정을 통해 폴더 자체는 root 이지만 하위 생성된 파일들의 권한은 root 가 아닌 것을 알 수 있습니다.
 
 ```bash
 $ sudo ls -l /var/lib/docker/231072.231072/
@@ -145,9 +154,9 @@ spec:
           ...
 ```
 
-## RULE #3. 커널 레벨 역량(capabilities) 제한
+## 규칙 #3. 커널 레벨 역량(capabilities) 제한
 
-리눅스 커널에서 역량(capability)라는 개념이 있습니다. ((리눅스 MAN 페이지의 capabilities 섹션 참고)[http://man7.org/linux/man-pages/man7/capabilities.7.html]) 커널 2.2 부터 superuser 의 권한을 단위로 세분화하여 capabilties 라고 부르며 이들은 서로 독립적으로 비/활성화될 수 있습니다. 이러한 capabilities 는 Thread 마다의 속성입니다. 
+리눅스 커널에서 역량(capability)라는 개념이 있습니다. ([리눅스 MAN 페이지의 capabilities 섹션 참고](http://man7.org/linux/man-pages/man7/capabilities.7.html)) 커널 2.2 부터 superuser 의 권한을 단위로 세분화하여 capabilties 라고 부르며 이들은 서로 독립적으로 비/활성화될 수 있습니다. 이러한 capabilities 는 Thread 마다의 속성입니다. 
 
 도커는 기본값으로 캐퍼빌러티 중에 일부만을 상속받아 구동됩니다. 하지만, 여러분은 실행 전에 옵션을 통해 이러한 캐퍼빌러티를 조정할 수 있습니다. 한번 살펴볼까요?
 
@@ -155,7 +164,11 @@ spec:
 docker run --can-drop all --cap-add CHOWN alpine
 ```
 
-`--can-drop all` 은 모든 캐퍼빌러티를 비황서화 한 뒤에 `CHOWN`에 대해서만 권한을 열어줍니다. 이는 man 페이지에서 CAP_CHOWN 와 동일한 캐퍼빌러티 속성으로 파일의 UID, GID 를 변경할 수 있는 권한 입니다. 
+<br>
+{% include advertisements.html %}
+<br>
+
+`--can-drop all` 은 모든 캐퍼빌러티를 비활성화 한 뒤에 `CHOWN`에 대해서만 권한을 열어줍니다. 이는 man 페이지에서 CAP_CHOWN 와 동일한 캐퍼빌러티 속성으로 파일의 UID, GID 를 변경할 수 있는 권한 입니다. 
 
 > ⚠ **주의**: 절대 `--privileged` 플래그를 통해서 컨테이너를 실행하지 않도록 합니다.
 
@@ -182,7 +195,7 @@ spec:
           ...
 ```
 
-### RULE #4. -no-new-privileges 플래스 추가
+## 규칙 #4. no-new-privileges 플래그 추가
 
 이 또한 권한 상승 취약점을 염두해 둔 규칙입니다. 도커는 백엔드에서 컨테이너를 관리하는 데몬이다보니 권한 상승에 대해 상당한 비중을 두고 있습니다. 
 
@@ -206,21 +219,31 @@ spec:
           ...
 ```
 
-### RULE #5. 컨테이너간 통신(ICC) 비활성화(--icc=false)
+<br>
+{% include advertisements.html %}
+<br>
+
+## 규칙 #5. 컨테이너간 통신(ICC) 비활성화(--icc=false)
 
 기본값으로 도커는 ICC(inter-container communication)이 활성화되어 있습니다. 이것의 의미는 모든 컨테이너들이 서로를 docker0 이라는 bridged network 를 통해서 대화할 수 있음을 의미합니다. 이는 `-icc=false` 플래그를 통해서 dockerd (도커 데몬)을 통해서 비활성화가 가능합니다. 
 
-그러나 이러한 설정을 하게될 경우 컨테이너들 간에 대화를 위해 아래의 플래그를 일일이 설정해 주어야 한다는 불편함이 있습니다. 
-
+그러나 이러한 설정을 하게될 경우 컨테이너들 간에 대화를 위해 link 플래그를 일일이 설정해 주어야 한다는 불편함이 있습니다. 
 
 `--link=CONATINER_NAME_or_ID:ALIAS` 와 같은 속성을 통해서 icc 를 비활성화 한 뒤에 통신이 가능하도록 설정할 수 있으므로 **기본 차단 후 사용 시 Open 이라는 방화벽 운영 개념** 정도로 여기면 좋을 것 같습니다.
 
-### RULE #6. 리눅스 보안 모듈 사용 (seccomp, AppArmor, SELinux)
+<br>
+{% include advertisements.html %}
+<br>
+
+## 규칙 #6. 리눅스 보안 모듈 사용 (seccomp, AppArmor, SELinux)
 
 이 규칙은 OS 레벨의 보안 설정을 이용할 것을 말합니다. 세부 내용은 추후에 AppArmor, seccomp 순으로 글을 올리도록 하겠습니다.
 
+<br>
+{% include advertisements.html %}
+<br>
 
-### RULE #7. 리소스 제한 (memory, CPU, file descriptor, processes, restarts)
+## 규칙 #7. 리소스 제한 (memory, CPU, file descriptor, processes, restarts)
 
 DoS 공격을 피하는 방법으로 리소스를 제한하는 방법이 있습니다. 즉, memory, CPU, 최대 재시작 제한 횟수, 파일 디스크립터의 최대 수, 프로세스의 최대 수를 제한함으로 써 DoS 공격을 피할 수 있습니다. 
 
@@ -230,7 +253,7 @@ DoS 공격을 피하는 방법으로 리소스를 제한하는 방법이 있습�
   - `--ulimit nproc=<number>` : 최대 프로세스 수
 
 
-### RULE #8. 파일시스템 그리고 볼륨을 읽기 전용으로 설정
+## 규칙 #8. 파일시스템 그리고 볼륨을 읽기 전용으로 설정
 
 컨테이너 구동 시 파일시스템에 대해 read-only 권한 설정을 `--read-only` 플래그를 통해 구현합니다. 아래의 예를 살펴볼까요?
 
@@ -241,7 +264,7 @@ $ docker run --read-only alpine sh -c 'echo "Whatever"' > /tmp/whatever'
 sh: can't create /tmp/whatever: Read-only file system
 ```
 
-그러나 여러분들의 애플리케이션은 임시 파일을 생성할 피요가 있을 수 있습니다. 이러한 경우 `--tmpfs` 플래그를 같이 조합하면 좋습니다. 위의 명렁어는 실패하였지만, 아래의 명령어는 정상적으로 실행이됩니다. 그러나 걱정하지마세요. 이 명령어의 영향 범위는 컨테이너 내부입니다.
+그러나 여러분들의 애플리케이션은 임시 파일을 생성할 필요가 있을 수 있습니다. 이러한 경우 `--tmpfs` 플래그를 같이 조합하면 좋습니다. 위의 명렁어는 실패하였지만, 아래의 명령어는 정상적으로 실행이됩니다. 그러나 걱정하지마세요. 이 명령어의 영향 범위는 컨테이너 내부입니다.
 
 ```bash
 $ docker run --read-only --tmpfs /tmp alpine sh -c 'echo "whatever" > /tmp/file'
@@ -266,6 +289,10 @@ drwxrwxrwt    2 root     root            60 Sep  5 01:51 .
 drwxr-xr-x    1 root     root          4096 Sep  5 01:51 ..
 -rw-r--r--    1 4000     4000             9 Sep  5 01:51 file
 ```
+
+<br>
+{% include advertisements.html %}
+<br>
 
 - docker-compose (도커 컴포즈)
 
@@ -315,9 +342,9 @@ $ docker run -v volume-name:/path/in/container:ro alpine
 $ docker run --mount source=volume-name,destination=/path/in/container,readonly alpine
 ```
 
-### RULE #9. 정적 분석 툴 사용(Static Analysis tools)
+## 규칙 #9. 정적 분석 툴 사용(Static Analysis tools)
 
-컨테이너 상의 취약점을 감지하기 위해 정적 이미지 스캔 툴을 사용하도록 한다. 
+컨테이너 상의 취약점을 감지하기 위해 정적 이미지 스캔 툴을 사용하는 것을 권장해 드립니다.
 
 - 무료
   - Clair
@@ -340,17 +367,34 @@ $ docker run --mount source=volume-name,destination=/path/in/container,readonly 
 - inspec.io
 - dev-sec.io
 
-### RULE #10. 로깅 레벨은 INFO 로 설정
+<br>
+{% include advertisements.html %}
+<br>
 
-기본값으로 도커 데몬은 info 로깅 설정 레벨로 구성된다. 만약에 이러한 경우가 아닐 경우에는 info 레벨로 데몬 로깅 레벨로 설정한다. `debug` 로깅 레벨을 설정할 경우 
+## 규칙 #10. 로깅 레벨은 INFO 로 설정
+
+기본값으로 도커 데몬은 info 로깅 설정 레벨로 구성됩니다. 만약에 이러한 경우가 아닐 경우에는 info 레벨로 데몬 로깅 레벨로 설정합니다. `debug` 로깅 레벨을 설정할 경우 모든 로그 출력되므로 주의를 기울 입니다.
 
 ```bash
 $ docker-compose --log-level info up
 ```
+<br>
+{% include advertisements.html %}
+<br>
 
-# 마무리
+## 마무리
 
-지금까지 프론트 앱을 Microservice 구현을 위해 컨테이너화를 하고 Nginx, Vue 구성이 제대로 동작하는지 확인하였습니다. 다음 장에는 Backend 를 구성하여 진정한 API Gateway 패턴을 구현해 보도록 하겠습니다. 지금까지 **코마** 였습니다.
+지금까지 Docker 보안 하드닝에 대해 알아보았습니다. 도커 보안을 강화하는 10 가지 규칙에 대해서 알아보았습니다. 사용자 할당에서부터 로깅까지 다양한 내용을 살펴 볼 수 있었네요. 위의 내용을 잘 갈무리하셔서 도커 보안 설정 시 이 내용을 어렴풋이 떠올린다면 저 코마의 목적은 일부 달성한 것입니다.
+
+<br>
+{% include advertisements.html %}
+<br>
+
+다음 시간에는 `Docker 권한 상승 취약점 (CVE-2019-5736)`을 완벽하게 이해하실 수 있도록 정리해보도록 하겠습니다.
+
+아직 드릴 이야기가 무궁무진하니 좀 더 지켜봐주시면 더욱 감사할 것 같아요! 대한민국 IT인 여러분들의 건승을 기원합니다.
+
+지금까지 **코마** 였습니다.
 
 구독해주셔서 감사합니다. 더욱 좋은 내용으로 찾아뵙도록 하겠습니다. 감사합니다
 
@@ -358,11 +402,4 @@ $ docker-compose --log-level info up
 
 이번 시간에 참조한 링크는 아래와 같습니다. 잘 정리하셔서 필요할 때 사용하시길 바랍니다.
 
-- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-5736
-- https://github.com/Frichetten/CVE-2019-5736-PoC/blob/master/main.go
-- https://gist.github.com/code-machina/bcb079e04c2a3101c422be07a262627c
-- https://github.com/lxc/lxc/commit/6400238d08cdf1ca20d49bafb85f4e224348bf9d
-- https://resources.whitesourcesoftware.com/blog-whitesource/top-5-docker-vulnerabilities
-- https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html
-- https://cheatsheetseries.owasp.org/cheatsheets/Attack_Surface_Analysis_Cheat_Sheet.html
-- https://docs.docker.com/get-started/
+- [OWASP : 도커 하드닝](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html)

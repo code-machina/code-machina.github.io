@@ -22,7 +22,7 @@ excerpt_separator: <!--more-->
 
 ## JWT 란?
 
-RFC7519를 통해 JWT는 상호간의 정보를 안전하게 전송하는데 사용되는 기술입니다. JSON객체를 이용하며 압축적이고 스스로 무결함을 입증할 수 있는 방식이므로 효율성이 높습니다. 즉, 디지털 서명을 통해 검증 가능하고 신뢰할 수 있는 정보를 운반합니다. JWT 는 비밀키를 사용하여 서명되는데 이 때 HMAC 알고리즘을 사용합니다. 또한 RSA 를 이용한 공개키/비밀키 쌍을 이용할 수 있습니다.
+RFC-7519를 통해 JWT는 상호간의 정보를 안전하게 전송하는데 사용되는 기술입니다. JSON객체를 이용하며 압축적이고 스스로 무결함을 입증할 수 있는 방식이므로 효율성이 높습니다. 즉, 디지털 서명을 통해 검증 가능하고 신뢰할 수 있는 정보를 운반합니다. JWT 는 비밀키를 사용하여 서명되는데 이 때 HMAC 알고리즘을 사용합니다. 또한 RSA 를 이용한 공개키/비밀키 쌍을 이용할 수 있습니다.
 
 JWT 는 주로 신원(identity) 정보와 클라이언트의 요청과 관련된 정보를 운반하는데 사용됩니다. 이 컨테이너는 서버에 의해서 서명되며 클라이언트의 조작을 사전에 방지합니다. 
 
@@ -31,6 +31,10 @@ JWT 는 주로 신원(identity) 정보와 클라이언트의 요청과 관련된
 이 토큰은 인증(authentication)을 통해서 생성됩니다. 그리고 서버에의해 검증됩니다. 어플리케이션에 의해 아이디 카드(컨테이너라고 불러도 무방)처럼 서버에게 제출 할 수 있으며 서버는 무결성(integrity)와 유효성(validity)를 안전한 방식으로 검증할 수 있습니다. 
 
 이 모든 과정이 휴대성(portability)과 비상태성(stateless) 상태로 이루어지는 JWT 속성으로 인해 클라이언트와 서버 기술의 분리가 용이합니다.
+
+<br>
+{% include advertisements.html %}
+<br>
 
 ## JWT의 구조
 
@@ -64,6 +68,10 @@ JWT.IO 에 따르면 토큰은 아래의 구조를 갖추고 있습니다. 크�
 HMACSHA256( base64UrlEncode(header) + "." + base64UrlEncode(payload), KEY )
 ```
 
+<br>
+{% include advertisements.html %}
+<br>
+
 ## JWT 고려사항
 
 JWT 토큰이 사용하기 쉽고 stateless 한 방법으로 서비스를 노출 시킬 수 있지만, 모든 경우에 있어 해결책은 아닙니다. 만약에 어플리케이션이 완전히 stateless 한 상태를 유지할 필요가 없다면 여러분은 전통적인 session 시스템을 통해서 여러분의 웹 프레임워크를 구성할 수 있습니다. 
@@ -75,11 +83,15 @@ JWT 토큰이 사용하기 쉽고 stateless 한 방법으로 서비스를 노출
 
 서버 측에서 RSA 알고리즘을 통해서 다음의 구조가 성립한다고 가정해봅니다. 비동기 키(asymmetric)의 특성상 Public 키를 통해서 암호하를 하고 서버에서 Private 키를 통해서 복호화를 하는 구성을 택하게 됩니다. 
 
-그러나, 만약 공격자가 이 알고리즘을 HMAC 으로 전환할 경우 Public Key 를 통해서 복호화와 암호화를 하게됩니다(서버 측은 암호화를 Public Key로 하기로 로직이 구성된 상태이므로). 따라서 공격자는 알고리즘을 바꿈으로써 자신에게 교부된 Public 키를 통해 JWT 를 재서명함으로써 권한 상승을 할 수 있습니다.
+그러나, **만약 공격자가 이 알고리즘을 HMAC 으로 전환할 경우 Public Key 를 통해서 복호화와 암호화를 하게됩니다(서버 측은 암호화를 Public Key로 하기로 로직이 구성된 상태이므로). 따라서 공격자는 알고리즘을 바꿈으로써 자신에게 교부된 Public 키를 통해 JWT 를 재서명함으로써 권한 상승**을 할 수 있습니다.
 
 1. 서버 ===== Public 키 교뷰 ======> 클라이언트
 2. 서버 <==== Token (Public 키 암호화 서명, HMAC, 데이터 변조) ===== 클라이언트
 3. 서버 ===== Grant Admin Privs =====> 클라이언트
+
+<br>
+{% include advertisements.html %}
+<br>
 
 ### 예방책(mitigation)
 
@@ -114,27 +126,31 @@ DecodedJWT decodedToken = verifier.verify(token)
 
 공격자에 의해서 토큰이 중간에서 가로 채기를 당하거나 도난을 당하였을 경우 시스템에 대한 접근 권한을 얻기위해 악용될 수 있습니다.
 
+<br>
+{% include advertisements.html %}
+<br>
+
 ### 방어 방법
 
 이를 효과적으로 방어하기 위해서는 사용자 컨텍스트를 토큰에 생성해야 합니다. 사용자 컨텍스트 정보는 다음의 정보로 구성됨에 유의해야 합니다.
 
-- 인증 시퀀스 동안에 생성된 무작위 문자열, 그리고 이 문자열은 토큰내에 포함되어야 합니다. 또한, 이 정보가 클라이언트에 전송될때 (HttpOnly, Secure, SameSite, cookie prefixes 와 같은 보안 설정이 갖추어야 져야 합니다.)
+- 인증 시퀀스 동안에 생성된 무작위 문자열, 그리고 이 문자열은 토큰 내에 포함되어야 합니다. 또한, 이 정보가 클라이언트에 전송될때 (HttpOnly, Secure, SameSite, cookie prefixes 와 같은 보안 설정이 갖추어야 져야 합니다.)
 
 - 무작위 문자열의 SHA256 해시는 토큰 내에 저장되며 XSS 이슈로 인해 공격자가 임의의 문자열 값을 일거나 예상되는 쿠키를 설정하는 것을 방지할 수 있습니다.
 
 아래는 위에서 JWT 를 보호하기 위한 HTTP 헤더 플래그를 설명한 내용입니다. (이 부분은 매우 중요하며 면접에도 자주 나오는 단골 개념들이니 꼭 유념하시길 바랍니다.)
 
-> `Secure` 쿠키는 `HTTPS 프로토콜을 통한 암호 요청만을 통해서 전송`할 수 있습니다. 예를들어 http 통신을 하는 안전하지 않은 사이트는 Secure 디렉티브로 설정된 쿠키를 구울 수 없습니다.
+> `Secure` 쿠키는 `HTTPS 프로토콜을 통한 암호 요청만을 통해서 전송`할 수 있습니다. 예를 들어 http 통신을 하는 안전하지 않은 사이트는 Secure 디렉티브로 설정된 쿠키를 구울 수 없습니다.
 
 > `HttpOnly` 쿠키는 자바 스크립트의 `Document.cookie` API를 통해 접근이 불가합니다. 이들은 오로지 서버로만 전송됩니다. 예를 들어 server-side 세션은 Javascript가 접근할 필요가 없습니다. 따라서 HttpOnly 플래그가 반드시 설정되어야 합니다.
 
 > SameSite 쿠키는 서버로 하여금 쿠키가 `교차 도메인 전송`이 차단합니다. CSRF 에 대해 보안을 제공합니다. SameSite 쿠키는 상대적으로 신규 플래그이며 모든 주요 브라우저에 의해서 지원되는 사항입니다.
 
-> 쿠키 Prefixes 는 브라우저에게 특정 속성(attribute, like Secure etc.)이 필요하다고 이야기하는 역할을 합니다. `__Secure-`이 대표적인 예입니다. 만약 `__Host-` Prefix 가 설정된 경우 `Path=/` 와 `Secure` 속성이 모두 필요함을 브라우저에게 알려줍니다. 
+> 쿠키 접두사(Prefix) 는 브라우저에게 특정 속성(attribute, like Secure etc.)이 필요하다고 이야기하는 역할을 합니다. `__Secure-`이 대표적인 예입니다. 만약 `__Host-` Prefix 가 설정된 경우 `Path=/` 와 `Secure` 속성이 모두 필요함을 브라우저에게 알려줍니다. 
 
 IP 주소는 IP 주소의 변경 이슈로 인해 사용할 수 없습니다. 또한, IP 주소의 사용은 잠재적으로 유럽 GDPR 컴플라이언스 레벨에서 이슈를 야기할 가능성이 존재합니다.
 
-토큰 유효성 검증 동안, 수신된 토큰이 올바른 컨텍스트를 포함하지 못한다면 다시 요청을 수신하도록 하거나 서버로 부터 거절되는 구현을 선택해야 합니다.
+토큰 유효성 검증 동안, 수신된 토큰이 올바른 컨텍스트를 포함하지 못한다면 다시 요청을 수신하도록 하거나 서버로부터 거절되는 구현을 선택해야 합니다.
 
 ```java
 // 위와 동
@@ -208,17 +224,21 @@ JWTVerifier verifier = JWT.require(Algorithm.HMAC256(keyHMAC))
 DecodedJWT decodedToken = verifier.verify(token);
 ```
 
+<br>
+{% include advertisements.html %}
+<br>
+
 ## 사용자에 의한 명시적 토큰 철회/취소
 
-이 문제는 JWT 에 고유한 문제이다. 토큰이 만료될 때 유효하지 않게되며 사용자는 명시적으로 토큰의 유효성 검증을 취소할 수단이 없게된다. 이는 즉 토큰이 유출될 경우 사용자는 토큰 자체를 취소할 수 없게되며 공격자를 차단할 수 없음을 의미한다.
+이 문제는 JWT 에 고유한 문제입니다. 토큰이 만료될 때 유효하지 않게 되며 사용자는 명시적으로 토큰의 유효성 검증을 취소할 수단이 없게 됩니다. 이는 즉 **토큰이 유출될 경우 사용자는 토큰 자체를 취소할 수 없게 되며 공격자를 차단할 수 없음을 의미한다**.
 
 ### 예방 방법
 
-이러한 위험으로부터 보호하는 방법은 token 의 블랙리스트를 구현하여 logout 기능을 모방하는데 사용하는 것이다. 이는 전통적인 세션 시스템에 존재하는 방법이다.
+이러한 위험으로부터 보호하는 방법은 token 의 블랙리스트를 구현하여 logout 기능을 모방하는데 사용하는 것이다. 이는 전통적인 세션 시스템에 존재하는 방법입니다.
 
-블랙리스트는 토큰의 헥사로 인코딩된 SHA256 다이제스트와 취소 일자(revokation date)를 함께 보관한다. 이 기간동안 발급된 토큰의 기간 유효성보다 상위의 우선순위를 가진다.
+블랙리스트는 토큰의 헥사로 인코딩된 SHA256 다이제스트와 취소 일자(revokation date)를 함께 보관한다. 이 기간동안 발급된 토큰의 기간 유효성보다 상위의 우선순위를 가집니다.
 
-사용자가 logout 을 원할때 지정된 서비스가 호출되며 제공된 사용자 토큰을 블랙리스트에 넣어둔다. 그리고 나중에 어플리케이션에서 사용 시 토큰을 말소 시킨다.
+사용자가 logout 을 원할때 지정된 서비스가 호출되며 제공된 사용자 토큰을 블랙리스트에 넣어 둡니다. 그리고 나중에 어플리케이션에서 사용 시 토큰을 말소 시킵니다.
 
 - 블랙리스트 토큰과 유효기간을 저장하는 테이블을 구성한다.
 
@@ -275,7 +295,6 @@ public class TokenRevoker {
              }
          }
      }
-
      return tokenIsPresent;
  }
 
@@ -316,14 +335,19 @@ public class TokenRevoker {
  }
 ```
 
+<br>
+{% include advertisements.html %}
+<br>
+
 ## 토큰 정보 노출
 
-공격자가 토큰에 접근하여 정보를 추출하는 방식이다. 이는 시스템에 대한 정보를 얻기 위한 방법입니다. 정보의 예는 보안 권한, 로그인 유형 등이 있습니다.
+공격자가 토큰에 접근하여 정보를 추출하는 방식입니다. 이는 시스템에 대한 정보를 얻기 위한 방법입니다. 정보의 예는 보안 권한, 로그인 유형 등이 있습니다.
 
 ### 예방 방법
 
-보호의 방법은 동기 알고리즘을 이용하여 토큰을 암호화하는 것이다. 그러나 이러한 공격 유형에는 Padding Oracle 이 있다. 보안 목적을 모두 달성하기 위해서는 AES-GCM([Galois/Counter Mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode)) 알고리즘을 사용합니다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주세요. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
-보호의 방법은 동기 알고리즘을 이용하여 토큰을 암호화하는 것입니다. 그러나 이러한 공격 유형에는 Padding Oracle 이 있다. 보안 목적을 모두 달성하기 위해서는 AES-GCM 알고리즘을 사용합니다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주시길 바랍니다. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
+보호의 방법은 동기 알고리즘을 이용하여 토큰을 암호화하는 것이다. 그러나 이러한 공격 유형에는 Padding Oracle 이 있습니다. 보안 목적을 모두 달성하기 위해서는 AES-GCM([Galois/Counter Mode](https://en.wikipedia.org/wiki/Galois/Counter_Mode)) 알고리즘을 사용합니다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주세요. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
+
+보호의 방법은 동기 알고리즘(AES 등의 대칭키 알고리즘)을 이용하여 토큰을 암호화하는 것입니다. 그러나 AES 중 CBC 모드에는 Padding Oracle 공격방법이 있습니다. 보안 목적을 모두 달성하기 위해서는 AES-GCM 알고리즘을 사용합니다. 패딩 오라클이 궁금하다면 아래의 링크를 참조해 주시길 바랍니다. Jupyter 노트북을 통해 원리를 완벽히 분석해 놓았습니다.
 
 - [Jupyter Notebook을 이용한 Padding Oracle 완전 분석](https://github.com/code-machina/TheoremToReal/blob/master/Padding-Oracle-Attack.ipynb)
 
@@ -479,17 +503,21 @@ String token = tokenCipher.decipherToken(cipheredToken, this.keyCiphering);
 // JWT API 를 사용하여 토큰 유효성 검증
 ```
 
-## 클라이언트 기반의 토큰 저장소
+<br>
+{% include advertisements.html %}
+<br>
+
+<!-- ## 클라이언트 기반의 토큰 저장소
 
 - 브라우저를 이용한 자동 전송 (Cookie 스토리지)
 - 브라우저가 재시작할지라도 쿠키 자동 전송 (localStorage 컨테이너를 사용)
-- XSS 이슈에 대해 
 
 ### 예방 방법
 
 1. sessionStorage 컨테이너를 사용하여 토큰을 보관
 2. 서비스 호출 시 Javascript 를 이용하여 Bearer를 추가
 3. 토큰 상에 핑거프린트 정보를 추가
+ -->
 
 ## 토큰 하이재킹
 
@@ -555,6 +583,10 @@ String token = tokenCipher.decipherToken(cipheredToken, this.keyCiphering);
  }
 ```
 
+<br>
+{% include advertisements.html %}
+<br>
+
 ## 토큰의 약한 암호화 키(secret)
 
 secret 이 HMAC SHA256 알고리즘에 사용되고 이 해시 값이 token 시그니처에 사용되는 경우 만약 secret 이 취약하다면 bruteforcing 의 위험에 노출될 수 있다.
@@ -563,12 +595,11 @@ secret 이 HMAC SHA256 알고리즘에 사용되고 이 해시 값이 token 시�
 
 ### 예방 방법
 
-screte 의 강도(strength)를 높이는 방법으로 Alphanumeric + special characters 를 조합한다.
+screte 의 강도(strength)를 높이는 방법으로 Alphanumeric + special characters 를 문자열 셋을 이용합니다.
 
 ```
 A&'/}Z57M(2hNg=;LE?~]YtRMS5(yZ<vcZTA3N-($>2j:ZeX-BGftaVk`)jKP~q?,jk)EMbgt*kW'(
 ```
-
 
 ```java
  /**
@@ -608,9 +639,23 @@ secrets.parallelStream().forEach(s -> {
 });
 ```
 
+<br>
+{% include advertisements.html %}
+<br>
+
 ## 마무리
 
-지금까지 프론트 앱을 Microservice 구현을 위해 컨테이너화를 하고 Nginx, Vue 구성이 제대로 동작하는지 확인하였습니다. 다음 장에는 Backend 를 구성하여 진정한 API Gateway 패턴을 구현해 보도록 하겠습니다. 지금까지 **코마** 였습니다.
+지금까지 JWT 보안 강화 방법에 대해서 알아보았습니다. 👏 (짝짝짝) 이 과정은 모든 문서를 정복할 때까지 매일 매일 업로드 하도록 할테니 내일 이 시간에도 시간을 내어 [코마의 훈훈한 블로그](https://code-machina.github.io) 를 찾아주세요!
+
+<br>
+{% include advertisements.html %}
+<br>
+
+다음 시간에는 `JWT 브루트포싱`을 완벽하게 이해하실 수 있도록 정리해보도록 하겠습니다.
+
+아직 드릴 이야기가 무궁무진하니 좀 더 지켜봐주시면 더욱 감사할 것 같아요! 대한민국 IT인 여러분들의 건승을 기원합니다.
+
+지금까지 **코마** 였습니다.
 
 구독해주셔서 감사합니다. 더욱 좋은 내용으로 찾아뵙도록 하겠습니다. 감사합니다
 

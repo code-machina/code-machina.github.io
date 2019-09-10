@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /categories/
-title: Categories
+title: 분류
 ---
 
 <div id="archives">

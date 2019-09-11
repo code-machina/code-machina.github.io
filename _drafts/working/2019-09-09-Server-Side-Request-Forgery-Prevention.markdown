@@ -110,20 +110,181 @@ SSRF 관점에서 아이피 주소 데이터에 대해 아래의 검증이 필�
 1. IP 정보가 유효한 V4 또는 V6 주소인지를 확인
 2. IP 주소가 신뢰하는 어플리케이션의 주소 인지 확인
 
+그렇다면, IP 검증을 편리하게 해주는 언어별 라이브러리 목록을 한변 살펴볼까요? 여러분에게 좋은 정보를 제공할 수 있을 듯하여 표로 정리해 보았습니다. (👏👏👏)
+
+|언어|라이브러리|비고|
+|:---:|:---:|:---:|
+|Java|[Apache : Common Validator](http://commons.apache.org/proper/commons-validator/)|`InetAddressValidator.isValid` 메서드를 이용한 검증|
+|.NET|.NET SDK 이용|[.NET SDK: IPAddress.TryParse](https://docs.microsoft.com/en-us/dotnet/api/system.net.ipaddress.tryparse?view=netframework-4.8) 참고|
+|Javascript|[NPM : ip-address](https://www.npmjs.com/package/ip-address)|SDK 문서를 참조|
+|Python|[ipaddress 모듈](https://docs.python.org/3/library/ipaddress.html)| SDK 문서를 참조|
+|Ruby|[IPAddr 모듈](https://ruby-doc.org/stdlib-2.0.0/libdoc/ipaddr/rdoc/IPAddr.html)|SDK 문서를 참조|
+
+위에서 언급한 라이브러리를 사용하여 출력된 결과 값을 IP 주소로 사용합니다. 그리고 화이트리스트 목록과 비교하여 유효성 검증을 할 경우 안전성이 높아집니다.
+
+### 도메인 이름
+
+도메인 이름을 기반으로 신뢰할 수 있는 호스트를 판별하는 과정은 아래의 우려 사항이 존재합니다.
+
+- DNS 서버 설정을 이용한 공격을 통해 DNS Resoultion 과정에 개입
+
+1. 이는 외부 DNS Resolver 로 정보를 노출할 수 있습니다.
+2. 내부 IP 주소로 유효한 도메인 이름을 바인딩하는 공격에 악용
+  - Exploit > 우회 > 입력값 검증 > DNS 피닝
+3. 내부 DNS Resolver 에 악성 데이터(Payload)를 전달
+
+SSRF 관점에서 아래의 유효성 검증을 생각할 수 있습니다.
+
+1. 유효한 도메인 이름인지를 검증
+2. 화이트리스트 기반의 도메인 이름에 속하는지 체크
+
+그렇다면 이러한 검증을 도와주는 라이브러리엔 무엇이 있을까요? 아래의 테이블로 정리해보았습니다.
+
+|언어|라이브러리|비고|
+|:---:|:---:|:---:|
+|Java|[Apache : Common Validator](http://commons.apache.org/proper/commons-validator/)|`DomainValidator.isValid` 메서드를 이용한 검증|
+|.NET|.NET SDK 이용|[.NET SDK: Uri.CheckHostName](https://docs.microsoft.com/en-us/dotnet/api/system.uri.checkhostname?view=netframework-4.8) 참고|
+|Javascript|[NPM : ip-valid-domain](https://www.npmjs.com/package/is-valid-domain)|SDK 문서를 참조|
+|Python|[validators.domain 모듈](https://validators.readthedocs.io/en/latest/#module-validators.domain)| SDK 문서를 참조|
+|Ruby|아쉽게도 없습니다.|하단을 참조|
+
+- Ruby 취약점 벡터
+
+domainator, public_suffix, addressable 등은 아래의 도메인 이름을 유효한 도메인 이름으로 치부합니다.
+즉, 공격 성공 가능성이 높음을 의미합니다.
+
+```html
+<script>alert(1)</script>.owasp.org
+```
+
+Ruby 개발자분들은 아래의 코드를 참조하셔서 적절히 도메인 유효성 검증을 수행하시면 됩니다.
+
+`^(((?!-))(xn--|_{1,1})?[a-z0-9-]{0,61}[a-z0-9]{1,1}\.)*(xn--)?([a-z0-9][a-z0-9\-]{0,60}|[a-z0-9-]{1,30}\.[a-z]{2,})$` ([출처: StackOverflow.com](https://stackoverflow.com/questions/10306690/what-is-a-regular-expression-which-will-match-a-valid-domain-name-without-a-subd/26987741#26987741))
+
+실제 코드는 아래와 같습니다.
+
+```ruby
+domain_names = ["owasp.org","owasp-test.org","doc-test.owasp.org","doc.owasp.org", 
+                "<script>alert(1)</script>","<script>alert(1)</script>.owasp.org"]
+domain_names.each { |domain_name|
+    if ( domain_name =~ /^(((?!-))(xn--|_{1,1})?[a-z0-9-]{0,61}[a-z0-9]{1,1}\.)*(xn--)?([a-z0-9][a-z0-9\-]{0,60}|[a-z0-9-]{1,30}\.[a-z]{2,})$/ )
+        puts "[i] #{domain_name} is VALID"
+    else
+        puts "[!] #{domain_name} is INVALID"
+    end
+}
+```
+
+유효한 도메인 이름인지를 검증하였으니 이제 두번째 단계의 검증을 합니다.
+
+1. 신뢰 할 수 있는 어플리케이션의 도메인 이름을 화이트 리스트 처리
+2. 도메인 이름이 화이트 리스트에 포함되는지 체크
+
+그러나 DNS Pinning 을 이용한 공격에는 여전히 취약합니다. 즉, 비즈니스 코드가 실행될 경우 DNS Resolution이 발생하기 때문이죠. 이러한 문제를 사전에 차단하기 위해서는 아래의 조치들을 해주어야 합니다.
+
+1. DNS Resolver 체임을 구성 할 때, 내부 DNS 서버를 첫번째 순서로 둡니다.
+2. 도메인 화이트리스트를 감시하여 이들 중 아래에 해당하는 경우를 감지합니다.
+  - 로컬 IP (v4 또는 v6)
+  - 내부망 IP
+
+```python
+# Dependencies: pip install ipaddress dnspython
+import ipaddress
+import dns.resolver
+
+# 도메인 화이트리스트 구성
+DOMAINS_WHITELIST = ["owasp.org", "labslinux"]
+
+# DNS 질의를 전달할 DNS Resolver 를 구성
+DNS_RESOLVER = dns.resolver.Resolver()
+DNS_RESOLVER.nameservers = ["1.1.1.1"] # 가상의 아이피 입니다.
+
+def verify_dns_records(domain, records, type):
+    """
+    공인이 아닌 아이피 주소에 대해 DNS 레코드 조회를 하며 
+    에러 발생 여부를 통해 Boolean 값을 리턴한다.
+    """
+    error_detected = False
+    if records is not None:
+        for record in records:
+            value = record.to_text().strip()
+            try:
+                ip = ipaddress.ip_address(value)
+                # See https://docs.python.org/3/library/ipaddress.html#ipaddress.IPv4Address.is_global
+                if not ip.is_global:
+                    print("[!] DNS record type '%s' for domain name '%s' resolve to 
+                    a non public IP address '%s'!" % (type, domain, value))
+                    error_detected = True
+            except ValueError:
+                error_detected = True
+                print("[!] '%s' is not valid IP address!" % value)
+    return error_detected
+            
+def check():
+    """
+    도메인 화이트 리스트를 체크한다. 에러가 발생할 경우 불린값을 리턴한다.
+    순서
+    1. A 레코드를 조회 
+    2. AAAA 레코드를 조회
+
+    """
+    error_detected = False
+    for domain in DOMAINS_WHITELIST:    
+        # Get the IPs of the curent domain
+        # See https://en.wikipedia.org/wiki/List_of_DNS_record_types
+        try:
+            # A = IPv4 address record        
+            ip_v4_records = DNS_RESOLVER.query(domain, "A")
+        except Exception as e:
+            ip_v4_records = None            
+            print("[i] Cannot get A record for domain '%s': %s\n" % (domain,e))        
+        try:
+            # AAAA = IPv6 address record
+            ip_v6_records = DNS_RESOLVER.query(domain, "AAAA")
+        except Exception as e:
+            ip_v6_records = None
+            print("[i] Cannot get AAAA record for domain '%s': %s\n" % (domain,e))
+        # Verify the IPs obtained
+        if verify_dns_records(domain, ip_v4_records, "A") 
+        or verify_dns_records(domain, ip_v6_records, "AAAA"):
+            error_detected = True
+    return error_detected
+
+if __name__== "__main__":
+    if check():
+        # 에러가 검출되면 True 이므로 비정상 호스트임을 의미
+        exit(1)
+    else:
+        # 정상인 경우 0 값을 리턴
+        exit(0)
+```
 
 
+### URL
 
+**URL 정보를 입력값으로 받아들이는 경우는 지양해야합니다**. 이는, URL 을 검증하는 과정이 매우 어렵고 파서를 악용할 가능성이 높기 때문입니다. 만약 네트워크 정보가 필요하다면, 유효한 IP 주소 또는 도메인 이름을 검증하도록 구현합니다.
 
+### 네트워크 계층
 
+네트워크 계층의 보안은 취약한 어플리케이션이 무분별하게 다른 어플리케이션을 호출하는 것을 예방하기 위함입니다. 
 
+따라서, 허용된 라우트를 통해서만 어플리케이션이 접근할 수 있도록 구성합니다. 이때 방화벽을 이용하여 접근제어를 구성합니다.
 
+<br>
+[![SSRF 공격 구성도 2](https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_Case1_NetworkLayer_PreventFlow.png)](https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_Case1_NetworkLayer_PreventFlow.png)
+<br>
 
-세부적인 공격 사례는 차치해두고 이제 방어 방법을 알아볼까요? 저희는 역으로 방어 방법 속에서 공격을 유추하는 과정을 통해 다양한 각도에서 공격이 가지는 의의를 알아 볼까 합니다.
-
-
+<br>
 {% include advertisements.html %}
+<br>
 
-## 
+## 사례 2
+
+**사례1**의 내용이 길다보니 사례2의 내용을 상기해 보도록 하겠습니다.
+
+어플리케이션이 어떠한 외부 IP 나 도메인으로 요청을 전송하는 구성인 경우를 다루도록 하겠습니다. 
+
+
 
 
 ## 마무리

@@ -174,9 +174,16 @@ p.cm-cover-subtitle {
   overflow-wrap: break-word;
 }
 
+
+// PC 환경아 아닐 때에는 모두 숨김처리한다.
 .cm-left-sidebar {
   display: none;
 }
+
+.cm-left-sidebar-for-toc {
+  display: none;
+}
+
 .cm-right-sidebar {
   display: none;
 }
@@ -284,7 +291,7 @@ p.cm-cover-subtitle {
     // float: right;
     float: none;
     position: fixed;
-    left: 60px;
+    left: 190px;
 
     width: 352px;
     // padding: 24px;

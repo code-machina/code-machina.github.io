@@ -12,6 +12,45 @@
 - CI | 메뉴 | 검색바
 */
 
+@mixin for-phone-only {
+  @media (max-width: 599px) { @content; }
+}
+@mixin for-tablet-portrait-up {
+  @media (min-width: 600px) { @content; }
+}
+@mixin for-tablet-landscape-up {
+  @media (min-width: 900px) { @content; }
+}
+@mixin for-desktop-up {
+  @media (min-width: 1200px) { @content; }
+}
+@mixin for-big-tablet-up {
+  @media (min-width: 1365px) { @content; }
+}
+@mixin for-big-desktop-up {
+  @media (min-width: 1800px) { @content; }
+}
+
+.cm-header-wrapper {
+
+  @include for-tablet-portrait-up {
+    width: 540px;
+  }
+  @include for-tablet-landscape-up {
+    width: 940px;
+  }
+  @include for-desktop-up {
+    width: 1280px;
+  }
+  @include for-big-tablet-up {
+    width: 1280px;
+  }
+  @include for-big-desktop-up {
+    width: 1280px;
+  }
+}
+
+
 .cm-header-wrapper {
   // max-width: -webkit-calc(1000px - (30px * 2));
   // max-width: calc(1000px - (30px * 2));
@@ -38,11 +77,8 @@
 // @media screen and (max-width: 1250px) {
 @media only screen and (max-width: 1250px) {
   .cm-header-wrapper {
-    // max-width: -webkit-calc(800px - (30px));
-    // max-width: calc(800px - (30px));
-    // min-height: calc(59px);
-    // padding-right: 15px;
-    // padding-left: 15px; 
+    // PC 화면에서만 적용되도록 해보자.
+    color: red;
   } 
 }
 
@@ -53,5 +89,6 @@
     // min-height: calc(129px);
     // padding-right: 15px;
     // padding-left: 15px; 
+    color: red;
   } 
 }

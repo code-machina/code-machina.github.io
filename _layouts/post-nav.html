@@ -13,22 +13,25 @@
 
     <main class="page-content cm-blog-page" aria-label="Content">
       <!-- 좌측 사이드바 시작 -->
-      <div class="cm-right-sidebar">
+      <div class="cm-left-sidebar">
         <div class="cm-toc">
           <div class="cm-toc-title">Content Table</div>
           <!-- TODO: Toc 커스터마이징 작업 필요 (완료) -->
           <div class="cm-toc-items">
             {%- include toc.html html=content sanitize=true class="inline_toc" id="my_toc" h_min=2 h_max=2 -%}
           </div>
-          
           <p class="cm-toc-version"> cm-toc v.0.4 By 코마</p>
-        </div>
-        <!-- 구글 광고 -->
-        <div class="cm-googlead">
-          {%- include googlead-left-side.html html=content -%}
         </div>
       </div>
       <!-- 좌측 사이드바 끝 -->
+      <!-- <div class="page-content cm-blog-page" aria-label="Content"> -->
+        <div class="cm-right-sidebar">
+          <!-- 구글 광고 -->
+          <div class="cm-googlead">
+            {%- include googlead-left-side.html html=content -%}
+          </div>  
+        </div>
+      <!-- </div> -->
 
       <div class="wrapper cm-blog-content">
         {{ content }}

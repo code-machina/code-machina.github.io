@@ -279,12 +279,26 @@ p.cm-cover-subtitle {
     color: #767676;
   }
 
-  .cm-left-sidebar {
+   .cm-left-sidebar-for-toc {
     display: inline-block;
     // float: right;
     float: none;
     position: fixed;
     left: 60px;
+
+    width: 352px;
+    // padding: 24px;
+    // margin-right: 50px;
+
+    color: #767676;
+  }
+
+  .cm-left-sidebar {
+    display: inline-block;
+    // float: right;
+    float: none;
+    position: fixed;
+    left: 200px;
 
     width: 352px;
     // padding: 24px;

@@ -68,7 +68,8 @@ code, pre {
 
 // 19.08.02 : 블로그 본문 배경색 변경
 .cm-blog-page {
-  background: #EAEAEA;
+  // 19.09.15 : 제거 조치
+  background: #E9EBEE
 }
 
 // 19.08.02 : 블로그 글 목록 페이지 배경색 변경
@@ -222,14 +223,16 @@ p.cm-cover-subtitle {
   }
   .cm-toc-title {
     border-radius: 10px 0px;
-    background: #00ffff;
+    // background: #00ffff;
     height: 30px;
     font-size: 20px;
     font-weight: 1000;
     padding: 10px 10px;
-    text-align: center;
-    color: #ffffff;
-    background: #767676;
+    padding-left: 28px;
+    text-align: left;
+    // color: #ffffff;
+    color: #333;
+    // background: #1A73E8;
   }
 
   .cm-toc-items {

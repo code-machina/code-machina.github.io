@@ -64,6 +64,62 @@ code, pre {
   h2.current {
     border-bottom-color: #1A73E8;
   }
+
+  a {
+    transition: color .2s ease-in-out,border-bottom-color .2s ease-in-out;
+    border-bottom: dotted 1px;
+    color: #f56a6a;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    border-bottom-color: #f56a6a;
+    color: #f56a6a !important
+  }
+  
+  a:hover strong {
+    color: inherit
+  }
+  
+  h1,h2,h3,h4,h5,h6 {
+    color: #1d2e3f;
+    // font-family: "Roboto Slab",serif;
+    font-weight: 500;
+    line-height: 1.5;
+    // margin: 0 0 1em 0
+  }
+
+  h1 a,h2 a,h3 a,h4 a,h5 a,h6 a {
+    color: inherit;
+    text-decoration: none
+  }
+
+  h1 {
+    font-size: 4em;
+    margin: 0 0 .5em 0;
+    line-height: 1.3
+  }
+
+  h2 {
+    font-size: 1.75em
+  }
+
+  h3 {
+    font-size: 1.25em
+  }
+
+  h4 {
+    font-size: 1.1em
+  }
+
+  h5 {
+    font-size: 0.9em
+  }
+
+  h6 {
+    font-size: 0.7em
+  }
+
 } 
 
 // 19.08.02 : 블로그 본문 배경색 변경

@@ -112,3 +112,79 @@ bundle show minima
 ```markdown
 [![Nginx 접속 화면](/assets/img/2019/08/nginx-01.png)](/assets/img/2019/08/nginx-01.png)
 ```
+
+
+## Syntax Highlighting 조정
+
+Kramdown, Rouge 를 이용해 문법 하이라이팅을 개선할 수 있다.
+
+```bash
+gem install kramdown rouge
+rougify style github > assets/css/syntax.css
+```
+
+Minima 사용 시 pre, code 스타일을 아래와 같이 변경해준다.
+
+우선, _base.scss 를 복사하여 커스터마이징한다.
+
+```bash
+cp /var/lib/gems/2.5.0/gems/minima-2.5.0/_sass/minima/_base.scss ./_sass/minima/
+```
+
+_base.scss 영역에서 `Code formatting` 이라는 영역을 찾고 아래와 같이 수정해준다. 
+
+```scss
+/**
+ * Code formatting
+ */
+// pre,
+// code {
+//   @include relative-font-size(0.9375);
+//   border: 1px solid $grey-color-light;
+//   border-radius: 3px;
+//   // background-color: #eef;
+// }
+
+// code {
+//   padding: 1px 5px;
+// }
+
+// pre {
+//   padding: 8px 12px;
+//   overflow-x: auto;
+
+//   > code {
+//     border: 0;
+//     padding-right: 0;
+//     padding-left: 0;
+//   }
+// }
+
+// 2019.09.15 : 코드 스타일링을 개선하였음
+
+code {
+  background: rgba(230,235,237,0.25);
+  border-radius: .375em;
+  border: solid 1px rgba(210,215,217,0.75);
+  font-family: "Courier New",monospace;
+  font-size: 0.9em;
+  margin: 0 0.25em;
+  padding: 0.25em 0.65em
+}
+
+pre {
+  -webkit-overflow-scrolling: touch;
+  font-family: "Courier New",monospace;
+  font-size: 0.9em;
+  margin: 0 0 2em 0
+}
+
+pre code {
+  display: block;
+  line-height: 1.75;
+  padding: 1em 1.5em;
+  overflow-x: auto
+}
+```
+
+- [참고: 지킬 문법 하이라이팅](https://mcpride.github.io/posts/development/2018/03/06/syntax-highlighting-with-jekyll/)

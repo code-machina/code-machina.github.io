@@ -28,7 +28,7 @@ layout: default
 
     <div class="cm-container">
       <div class="cm-title">
-          <h1 class="post-list-heading cm-cover-title">{{ page.list_title | default: "Post" }}</h2>
+          <h1 class="post-list-heading cm-cover-title">{{ page.list_title | default: "Articles" }}</h2>
       </div>
     </div>
 
@@ -36,22 +36,36 @@ layout: default
       <div class="cm-seperator"></div>  
     </div>
 
-    <ul class="post-list">
+    <!-- <ul class="post-list"> -->
       {%- for post in paginator.posts -%}
-        <li>
-          {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+      {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+        <div id="cm-article">
+          <h1>
+            <a href="{{ post.url | relative_url }}">
+                {{ post.title | escape }}
+            </a>
+          </h1>
+          <p>{{ post.date | date: date_format }}</p>
+          <p>
+            {%- if site.show_excerpts -%}
+              {{ post.excerpt }}
+            {%- endif -%}
+          </p>
+          <a href="{{ post.url | relative_url }}">
+            <button>Read</button>
+          </a>
+        </div>
+<!--           
           <span class="post-meta">{{ post.date | date: date_format }}</span>
           <h3>
             <a class="post-link" href="{{ post.url | relative_url }}">
               {{ post.title | escape }}
             </a>
           </h3>
-          {%- if site.show_excerpts -%}
-            {{ post.excerpt }}
-          {%- endif -%}
-        </li>
+          
+        </li> -->
       {%- endfor -%}
-    </ul>
+    <!-- </ul> -->
 
     <!-- 페이징 시작 -->
     {% if paginator.total_pages > 1 %}

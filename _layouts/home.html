@@ -12,7 +12,13 @@ layout: default
   <div class="cm-left-sidebar cm-wide-view">
       <div class="cm-googlead">
           {%- include googlead-left-side.html html=content -%}
-      </div>    
+      </div>
+      <!-- TODO: 신규 컴포넌트 추가
+        구글 광고의 display: absolute 로 변경하였다. 즉, 사이드 패널의 활용도를 좀더 높일 수 있다.
+       -->
+      <div>
+        <!-- 여기에 추가 컨텐츠를 넣는다. -->
+      </div>
   </div>
   
   
@@ -37,6 +43,9 @@ layout: default
     </div>
 
     <!-- <ul class="post-list"> -->
+      <!-- 포스팅 목록 노출하기 
+        TIP. 글자의 높이를 키우는 등의 조합을 이용해 가독성을 높일 수 있음.
+      -->
       {%- for post in paginator.posts -%}
       {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
         <div id="cm-article">
@@ -55,7 +64,7 @@ layout: default
             <button>Read</button>
           </a>
         </div>
-<!--           
+        <!--
           <span class="post-meta">{{ post.date | date: date_format }}</span>
           <h3>
             <a class="post-link" href="{{ post.url | relative_url }}">

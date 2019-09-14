@@ -17,19 +17,19 @@
 .cm-header-wrapper {
 
   @include for-tablet-portrait-up {
-    width: 540px;
+    // width: 540px;
   }
   @include for-tablet-landscape-up {
-    width: 940px;
+    // width: 940px;
   }
   @include for-desktop-up {
-    width: 1280px;
+    // width: 1280px;
   }
   @include for-big-tablet-up {
-    width: 1280px;
+    // width: 1280px;
   }
   @include for-big-desktop-up {
-    width: 1280px;
+    // width: 1280px;
   }
 }
 

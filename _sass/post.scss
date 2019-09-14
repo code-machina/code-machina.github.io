@@ -273,8 +273,8 @@ p.cm-cover-subtitle {
   .cm-right-sidebar {
     display: inline-block;
     // float: right;
-    float: none;
-    position: fixed;
+    // float: none;
+    position: absolute;
     // right: 60px;
     left: calc(60% + 250px);
 
@@ -304,7 +304,7 @@ p.cm-cover-subtitle {
     display: inline-block;
     // float: right;
     float: none;
-    position: fixed;
+    position: absolute;
     left: 200px;
 
     width: 352px;

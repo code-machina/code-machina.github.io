@@ -31,9 +31,9 @@ plugins:
   # - jekyll-toc
 header_pages:
   - about.md
-  - portfolio.md
+  # - portfolio.md
   # - interest.md
-  - categories.md
+  # - categories.md
   - changelog.md
 show_excerpts: true
 google_analytics: UA-134340962-1

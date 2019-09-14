@@ -90,6 +90,7 @@ DEPENDENCIES
   jekyll-paginate
   jekyll-seo-tag
   minima (~> 2.0)
+  rouge
   tzinfo-data
 
 BUNDLED WITH

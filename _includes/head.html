@@ -42,4 +42,34 @@
   {%- endif -%}
   <!-- Code Pen Js 추가 -->
   <script async="async" src="//codepen.io/assets/embed/ei.js"></script>
+  <script>
+    /* 
+      Pagination 스크립트 "actpage" 속성을 변경한다.
+      자세한 내용은 아래의 링크를 참조한다.
+      https://codepen.io/code-machina/pen/NWKBxBv
+    */
+
+    window.onload = function(){
+      var curr_uri = $(location).attr("pathname");
+      curr_uri = curr_uri.split('/').filter((val) => val.length != 0)
+      // console.log(curr_uri);
+      if (curr_uri.length > 1 && curr_uri[0] == "page" ) {
+        // ex. /page/3 와 같은 uri 에만 동작
+        // var paginationPage = parseInt($('.cdp').attr('actpage'), 10);
+        // $('.cdp_i').on('click', function(){
+        //   var go = $(this).attr('data-page').replace('#!', '');
+        //   if (go === '+1') {
+        //     paginationPage++;
+        //   } else if (go === '-1') {
+        //     paginationPage--;
+        //   }else{
+        //     paginationPage = parseInt(go, 10);
+        //   }
+        //   $('.cdp').attr('actpage', paginationPage);
+        // });
+      }else if (curr_uri.length == 0) {
+        console.log('landing page')
+      }
+    };
+  </script>
 </head>

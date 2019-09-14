@@ -16,7 +16,7 @@
 title: 코마의 훈훈한 공간
 email: gbkim1988@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  좋은 IT 기술을 쉽게 그리고 간편하게 읽도록 도와드립니다. (외주 작업 진행 문의 받습니다.)
+  좋은 IT 기술을 쉽게 그리고 간편하게 읽도록 도와드립니다.
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "http://code-machina.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: gbkim1988
@@ -40,6 +40,16 @@ google_analytics: UA-134340962-1
 permalink: /:year/:month/:day/:title:output_ext
 disqus:
   shortname: code-machina
+paginate: 5
+paginate_path: "/page/:num"
+
+# pagination:
+#   enabled: true
+#   per_page: 3
+#   title: ':title - page :num of :max'
+#   limit: 0
+#   sort_field: 'date'
+#   sort_reverse: true
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

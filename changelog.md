@@ -6,6 +6,7 @@ title: 변경 내역
 
 ## 2019
 
+- Sep 14 : 랜딩 페이지, 페이징 추가
 - Aug 11 : Lightbox 기능 추가(이미지 클릭 시 확대)
 - Aug 10 : ToC 애니메이션 추가 (v.0.4)
 - Aug 08 : ToC 및 Content CSS 조정

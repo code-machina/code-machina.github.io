@@ -3,10 +3,6 @@ layout: default
 ---
 
 <div class="home">
-  <!-- 구글 광고 코드 영역 (시작) -->
-
-  {%- include advertisements.html html=content -%}
-  
   <div class="cm-right-sidebar cm-wide-view">
       <div class="cm-googlead">
           {%- include googlead-left-side.html html=content -%}
@@ -19,6 +15,7 @@ layout: default
       </div>    
   </div>
   
+  
   <!-- 구글 광고 코드 영역 (종료) -->
 
   {%- if page.title -%}
@@ -28,24 +25,69 @@ layout: default
   {{ content }}
 
   {%- if site.posts.size > 0 -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+
+    <div class="cm-container">
+      <div class="cm-title">
+          <h1 class="post-list-heading cm-cover-title">{{ page.list_title | default: "Post" }}</h2>
+      </div>
+    </div>
+
+    <div class="cm-container">
+      <div class="cm-seperator"></div>  
+    </div>
+
     <ul class="post-list">
-      {%- for post in site.posts -%}
-      <li>
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
-        <h3>
-          <a class="post-link" href="{{ post.url | relative_url }}">
-            {{ post.title | escape }}
-          </a>
-        </h3>
-        {%- if site.show_excerpts -%}
-          {{ post.excerpt }}
-        {%- endif -%}
-      </li>
+      {%- for post in paginator.posts -%}
+        <li>
+          {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+          <span class="post-meta">{{ post.date | date: date_format }}</span>
+          <h3>
+            <a class="post-link" href="{{ post.url | relative_url }}">
+              {{ post.title | escape }}
+            </a>
+          </h3>
+          {%- if site.show_excerpts -%}
+            {{ post.excerpt }}
+          {%- endif -%}
+        </li>
       {%- endfor -%}
     </ul>
 
+    <!-- 페이징 시작 -->
+    {% if paginator.total_pages > 1 %}
+        <div class="content_detail__pagination cdp debug" actpage="{{ paginator.page }}">
+            
+            {% if paginator.previous_page %}
+              <!-- 이전 페이지가 있다면 이전으로 이동하는 버튼을 보여준다. -->
+              <a data-page="#!-1" href="{{ paginator.previous_page_path | relative_url }}" class="cdp_i">PREV</a>
+            {% else %}
+              <a data-page="#!-1" class="cdp_i">PREV</a>
+            {% endif %}
+  
+            {% for page in (1..paginator.total_pages) %}
+              {% if page == paginator.page %}
+                <!-- 현재 페이지의 경우, 클릭되지 않도록 설정한다. -->
+                  <a data-page="#!{{ page }}" href="{{ site.paginate_path | relative_url | replace: ':num', page }}" class="cdp_i">{{ page }}</a>
+              {% elsif page == 1 %}
+                <a data-page="#!{{ page }}" href="/" class="cdp_i">1</a>
+              {% else %}
+                <a data-page="#!{{ page }}" href="{{ site.paginate_path | relative_url | replace: ':num', page }}" class="cdp_i">{{ page }}</a>
+              {% endif %}
+            {% endfor %}
+            
+            {% if paginator.next_page %}
+              <a href="{{ paginator.next_page_path | relative_url }}" class="cdp_i">NEXT</a>
+            {% else %}
+              <a href="{{ paginator.next_page_path | relative_url }}" class="cdp_i">NEXT</a>
+            {% endif %}
+          </ul>
+        </div>
+      {% endif %}
+      <!--  페이징 종료 -->
+
+    <!-- 구글 광고 코드 영역 (시작) -->
+    {%- include advertisements.html html=content -%}
+    
     <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
   {%- endif -%}
 

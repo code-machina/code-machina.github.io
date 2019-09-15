@@ -120,6 +120,16 @@ code, pre {
     font-size: 0.7em
   }
 
+  // 마크다운의 인용 부분을 개선
+  blockquote {
+    color: #828282;
+    border-left: 4px solid #e8e8e8;
+    padding-left: 15px;
+    font-size: 1.0rem;
+    letter-spacing: -1px;
+    font-style: italic;
+  }
+
 } 
 
 // 19.08.02 : 블로그 본문 배경색 변경
@@ -267,8 +277,8 @@ p.cm-cover-subtitle {
 // }
 
 // 2019.08.11 code-machina
-// 
-@media (min-width: 1562px) {
+// 2019.09.15 @code-machina : 1900px 이상부터 사이드패널 활성화
+@media (min-width: 1900px) {
   // Code-machina 편집 
   // Floating Table Of Content (ToC)
   .cm-googlead {

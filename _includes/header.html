@@ -3,11 +3,19 @@
   <div class="wrapper cm-header-wrapper">
     {%- assign default_paths = site.pages | map: "path" -%}
     {%- assign page_paths = site.header_pages | default: default_paths -%}
-    <a class="site-title" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
-    <!-- TODO: 사이트 네비게이터: 수정 작업 -->
+    <div class="cm-site-logo">
+      <!-- <img class="cm-img-logo" src="{{ "/favicon.ico?v2" | relative_url }}" alt=""> -->
+      <!-- <span>CM</span> -->
+      <!-- <div id="flip">
+        <div><div><a class="site-title cm-site-title" rel="author" href="{{ "/" | relative_url }}">{ 코마의 }</a></div></div>
+        <div><div><a class="site-title cm-site-title" rel="author" href="{{ "/" | relative_url }}">{ 훈훈한 공간 }</a></div></div>
+        <div><div><a class="site-title cm-site-title" rel="author" href="{{ "/" | relative_url }}">{ 블로그 }</a></div></div>
+      </div> -->
+      <a class="site-title cm-site-title" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
+      <!-- TODO: 사이트 네비게이터: 수정 작업 -->
     <!-- FIXME: Whoall things -->
     {%- if page_paths -%}
-      <nav class="site-nav">
+      <nav class="site-nav cm-site-nav">
         <input type="checkbox" id="nav-trigger" class="nav-trigger" />
         <label for="nav-trigger">
           <span class="menu-icon">
@@ -24,8 +32,27 @@
             <a class="page-link" href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>
             {%- endif -%}
           {%- endfor -%}
+          <a href="{{ "/feed.xml" | relative_url }}" class="page-link" >
+              <!-- <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p> -->
+            <svg class="rss-icon" viewBox="0 0 32 32">
+              <circle cx="5" cy="27" r="5" fill="currentColor" stroke="none" />
+              <circle cx="0" cy="32" r="18" stroke-width="7" />
+              <circle cx="0" cy="32" r="28" stroke-width="7" />
+            </svg>
+            <span class="rss-subscribe">rss</p>
+          </a>
         </div>
+          
       </nav>
     {%- endif -%}
+   
+    </div>
+    
+    
+
+    <!-- <div class="site-nav-right">
+      <a>Gura</a>
+      <a>Gura</a>
+    </div> -->
   </div>
 </header>

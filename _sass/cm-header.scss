@@ -15,7 +15,9 @@
 @import "media";
 
 .cm-header-wrapper {
-
+  // display: flex;
+  // position: fixed;
+  height: 36px;
   @include for-tablet-portrait-up {
     // width: 540px;
   }
@@ -24,54 +26,62 @@
   }
   @include for-desktop-up {
     // width: 1280px;
+    .cm-site-logo {
+
+    }
+    max-width: calc(1200px - (30px * 2));
+    height: 36px;
   }
   @include for-big-tablet-up {
     // width: 1280px;
+    .cm-site-logo {
+    }
+    max-width: calc(1365px - (30px * 2));
+    height: 36px;
   }
   @include for-big-desktop-up {
     // width: 1280px;
+    .cm-site-logo {
+    }
+    max-width: calc(1800px - (30px * 2));
+    height: 36px;
+    
   }
+
+  .cm-site-logo {
+    vertical-align: top;
+    // height: 100%;
+  }
+
+  .cm-site-title {
+    font-size: 23px;
+    float: none;
+    margin-right: 20px;
+  }
+
+  .cm-site-nav {
+    
+    margin: 0 auto;
+  }
+  .site-nav-right {
+    // vertical-align: middle;
+    // text-align: center;
+    display: block;
+    // position: fixed;
+    float: right;
+  }
+
 }
 
-
-.cm-header-wrapper {
-  // max-width: -webkit-calc(1000px - (30px * 2));
-  // max-width: calc(1000px - (30px * 2));
-  
-  // margin-right: auto;
-  // margin-left: auto;
-  // padding-right: 30px;
-  // padding-left: 30px; 
+.cm-icon-list {
+  display: inline-block;
+ 
 }
 
-// @TODO: 매체(디바이스)별 CSS 적용 하기
-
-// @media screen and (max-width: 950px) {
-@media only screen and (max-width: 950px) {
-  .cm-header-wrapper {
-    // max-width: -webkit-calc(800px - (30px));
-    // max-width: calc(800px - (30px));
-    // padding-right: 15px;
-    // min-height: calc(129px);
-    // padding-left: 15px; 
-  } 
-}
-
-// @media screen and (max-width: 1250px) {
-@media only screen and (max-width: 1250px) {
-  .cm-header-wrapper {
-    // PC 화면에서만 적용되도록 해보자.
-    color: red;
-  } 
-}
-
-@media only screen and (max-width: 2000px) {
-  .cm-header-wrapper {
-    // max-width: -webkit-calc(800px - (30px));
-    // max-width: calc(800px - (30px));
-    // min-height: calc(129px);
-    // padding-right: 15px;
-    // padding-left: 15px; 
-    color: red;
-  } 
+.rss-icon {
+  stroke: currentColor;
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  color: orange;
 }

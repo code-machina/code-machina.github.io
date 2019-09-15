@@ -16,3 +16,7 @@
 @mixin for-big-desktop-up {
   @media (min-width: 1800px) { @content; }
 }
+
+@mixin for-huge-desktop-up {
+  @media (min-width: 2000px) { @content; }
+}

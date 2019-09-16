@@ -1,4 +1,5 @@
 {
   "terminal.integrated.shell.windows": "C:\\Windows\\System32\\bash.exe",
   "todo-tree.showTagsFromOpenFilesOnly": false,
+  "todo-tree.tree.showTagsFromOpenFilesOnly": false,
 }

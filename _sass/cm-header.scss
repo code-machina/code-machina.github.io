@@ -85,3 +85,230 @@
   fill: none;
   color: orange;
 }
+
+
+
+// 신규 Navbar 제작
+
+.cm-new-navbar {
+  display: flex;
+  justify-content: space-between;
+  margin: 17px auto; // 컨테이너 중앙 정렬
+  // $primary: #0000FA;
+  $primary: grey;
+  $accent: #F5F6FD;
+  
+  .container-search {
+    width: 100%;
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 617px;
+    width: 100%;
+    box-sizing: border-box;
+    
+    h1 {
+      color: white;
+      text-align: center;
+      color: $primary;
+      font-weight: bold;
+    }
+    
+    .container-input {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      ::placeholder { 
+        color: grey;
+        opacity: 1; /* Firefox */
+      }
+      .search-term {
+        max-width: 885px;
+        width: 100%;
+        background-color: white;
+        border: 1px solid $primary;
+        border-right: none;
+        color: $primary;
+        padding: 5px 5px 5px 25px;
+        height: 20px;
+        border-radius: 50px 0 0 50px;
+        outline: none;
+        -webkit-appearance: none;
+        caret-color: $primary;
+        font-size: 17px;
+        
+        &::-webkit-calendar-picker-indicator {
+          display: none;
+        }
+        
+        &:focus {
+          color: $primary;
+        }
+        
+        &::placeholder {
+          color: #A3A3FF;
+          font-weight: italic;
+        }
+      }
+
+      .search-button {
+        width: 70px;
+        height: 32px;
+        background: white;
+        text-align: center;
+        color: $primary;
+        border-radius: 0 50px 50px 0;
+        border: 1px solid $primary;
+        cursor: pointer;
+        font-size: 25px;
+        border-left: none;
+      }
+    }
+    
+    ul.search-history {
+      list-style-type: none;
+      padding: 0;
+      margin: 16px 0 0 0;
+      width: 100%;
+      
+      &:hover {
+        li {
+           opacity: .5;
+        }
+      }
+      
+      li {
+        color: $primary;
+        font-size: 16px;
+        margin-bottom: 8px;
+        padding: 12px 24px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        position: relative;
+        transition: all .3s ease-in-out;
+        border-radius: 8px;
+        
+        &:hover {
+          opacity: 1;
+        }
+        
+        span.text {
+          position: relative;
+          z-index: 3;
+          
+          a {
+            text-decoration: none;
+          }
+        }
+        
+        a.link {
+          width: 100%;
+          height: 40px;
+          display: block;
+          position: absolute;
+          z-index: 2;
+          left: 0;
+        }
+        
+        &:before, &:after {
+          font-family: 'Font Awesome\ 5 Free';
+          font-weight: 900;
+          margin-right: 12px;
+          transition: all .3s ease-in-out;
+        }
+        
+        &:before {
+          content: '\f1da';
+        }
+        
+        &:after {
+          content: '\f30b';
+          opacity: 0;
+          position: absolute;
+          right: 16px;
+        }
+        
+        &:hover {
+          background: rgba($primary, .1);
+          
+          &:after {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  
+  // Device 별 Width(폭) 조정
+  @include for-tablet-portrait-up {
+    height: 36px;
+    .container-search {
+      display: none; // hide Search bar
+    }
+  }
+  @include for-tablet-landscape-up {
+    // 900px 이하는 모바일 뷰로 전환한다.
+    .container-search {
+      display: flex;
+    }
+    .cm-search-bar {
+      width: 300px;
+      margin: 0 auto;
+    }
+    height: 36px;
+  }
+  @include for-desktop-up { // 
+    max-width: calc(1200px - (30px * 2)); // 1200 - 60 = 1140
+    height: 36px;
+    .cm-search-bar {
+      width: 500px;
+      margin: 0 auto;
+    }
+  }
+  @include for-big-tablet-up {
+    max-width: calc(1365px - (30px * 2)); // 1365 - 60 = 1305
+    height: 36px;
+  }
+  @include for-big-desktop-up {
+    max-width: calc(1800px - (30px * 2)); // 1800 - 60 = 1740
+    height: 36px;
+    
+  }
+
+  // Navigaiton 항목 (자동 생성)
+  .nav-item {
+    max-width: 240px;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: #424242;
+    font-size: 20px;
+    &:visited {
+      color: #424242;
+    }
+  }
+
+  .cm-logo {
+    margin-left: 20px;
+  }
+  
+  .cm-topnav {
+    // float: right;
+    display: flex;
+    justify-content: space-between;
+    a {
+      text-decoration: none;
+      color: #424242;
+      &:visited {
+        color: #424242;
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /changelog/
-title: 변경 내역
+title: 히스토리
 ---
 
 ## 2019

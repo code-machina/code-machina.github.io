@@ -3,7 +3,7 @@ layout: post
 title:  "SSRF 예방법 (Server Side Request Forgery Prevention)"
 subtitle: "알면 쉽지만 모르면 어려운 보안"
 author: "코마 (gbkim1988@gmail.com)"
-date:   2019-09-09 00:00:00 +0900
+date:   2019-09-26 00:00:00 +0900
 categories: [ "ssrf", "security", "mitigation", "15m"]
 excerpt_separator: <!--more-->
 ---
@@ -16,7 +16,7 @@ excerpt_separator: <!--more-->
 
 혹시 CSRF 라는 공격에 대해서 들어보신적이 있나요? 아마도 많은 분들이 XSS와 함께 가장 많이 발생하는 공격으로 알고 있을 것 같네요.
 
-SSRF 는 CSRF 와 유사한 공격 방식입니다. CSRF는 클라이언트로 하여금 공격자가 강제한 제어 동작을 수행하도록 하는 공격 방식입니다. 대신, SSRF 는 서버로 하여금 공격자가 강제한 제어 동적을 수행하도록 하는 공격 방식입니다. 
+SSRF 는 CSRF 와 유사한 공격 방식입니다. CSRF는 클라이언트로 하여금 공격자가 강제한 제어 동작을 수행하도록 하는 공격 방식입니다. 대신, SSRF 는 서버로 하여금 공격자가 강제한 제어 동작을 수행하도록 하는 공격 방식입니다. 
 
 공격의 대상이 클라이언트에서 서버로 바뀐 것입니다. 그렇다면 어떻게 이러한 공격이 가능하게 되었을까요?
 
@@ -31,6 +31,10 @@ SSRF 는 CSRF 와 유사한 공격 방식입니다. CSRF는 클라이언트로 �
   - 서버 A에서 요청(Claim)을 무분별하게 신뢰하였으므로 취약한 서버(어플리케이션)이라고 판단합니다.
 
 [![SSRF 공격 구성도](https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_SSRF_Common_Flow.png)](https://raw.githubusercontent.com/OWASP/CheatSheetSeries/master/assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_SSRF_Common_Flow.png)
+
+<br>
+{% include advertisements.html %}
+<br>
 
 ### 공격 발생 상황
 
@@ -47,10 +51,18 @@ SSRF 는 CSRF 와 유사한 공격 방식입니다. CSRF는 클라이언트로 �
 3. 내부까지 전파되는 사용자 요청
   - 즉, 어플리케이션이 내부 서비스까지 요청을 전파하는 경우입니다.
 
+<br>
+{% include advertisements.html %}
+<br>
+
 ### 기억해야할 사항
   - SSRF 는 프로토콜에 제한을 받지 않습니다. 즉, FTP, SMB, SMTP 등의 다른 프로토콜이나 `file://`, `phar://`, `gopher://` 등의 URI 스킴(URI Scheme)등을 사용 가능합니다.
   - 만약 어플리케이션이 XXE 인젝션 공격에 취약하다면 SSRF 공격을 검토해볼만 합니다. 
     - XXE 인젝션 공격을 이미 코마는 다루었습니다. 이 [XXE 인젝션 방어]({% link _posts/2019/07/2019-07-28-How-to-prevent-XXE Injection.markdown %}) 참조해주세요! 
+
+<br>
+{% include advertisements.html %}
+<br>
 
 ## SSRF 발동 조건
 
@@ -59,29 +71,41 @@ SSRF 는 CSRF 와 유사한 공격 방식입니다. CSRF는 클라이언트로 �
 1. **사례 1**: 어플리케이션이 신뢰하는 어플리케이션에게 요청을 전송할 수 있을 때
 2. **사례 2**: 어플리케이션이 어떠한 외부 IP 나 도메인으로 요청을 전송할 수 있을 때
 
-## 사례 1
+<br>
+{% include advertisements.html %}
+<br>
+
+## 사례 1: 신뢰 관계간 통신
 
 어플리케이션은 상황에 따라 다른 어플리케이션에게 요청을 전달할 필요가 있습니다. 다른 어플리케이션의 위치는 다른 네트워크 대역이거나 외부 서비스인 경우 등 다양합니다. 
 
 이러한 구성은 모두 특정한 목적 혹은 비즈니스 요구사항에 따라서 달라집니다. 예를들어 쇼핑몰 A와 쇼핑몰 B의 상품 정보를 공유하는 제휴를 맺었다고 가정해보면 이해가 쉽습니다.
 
+<br>
+{% include advertisements.html %}
+<br>
+
 ### HR 사례
 
 여러분들이 주로 사용하였을만한 그룹웨어 시스템을 알아볼까요? 아래의 조건에 유념해 주세요.
 
-1. 신규 그룹웨어는 HR 시스템에 접근하여 임직원의 프로필 정보를 요청한다.
-2. 임직원은 HR 시스템에 접근할 수 없다.
-3. 그룹웨어와 HR 시스템은 프로토콜을 통해서 통신한다.
+1. 신규 그룹웨어는 HR 시스템에 접근하여 임직원의 프로필 정보를 요청합니다.
+2. 임직원은 HR 시스템에 접근할 수 없습니다.
+3. 그룹웨어와 HR 시스템은 프로토콜을 통해서 통신합니다.
 
 만약에 여러분이 보안 담당자의 입장이고 공격자가 신규 그룹웨어를 악용할 가능성을 검토하고자 합니다. 일반적인 상황에서 임직원은 HR 시스템에 접근이 불가능합니다. 그러나 그룹웨어를 통해서 파라미터를 변조한다면 HR 시스템은 그룹웨어를 완전히 신뢰하고 요청한 정보를 제공할 수 밖에 없습니다.
 
+<br>
+{% include advertisements.html %}
+<br>
+
 ### 방어 방법
 
-이러한 류의 공격에 대해 시스템을 안전하게 보호하는 방법은 어플리케이션 계층과 네트워크 계층에 대해 각각 보안 강화(Hardening)를 합니다.
+이러한 류의 공격에 대해 시스템을 안전하게 보호하는 방법은 어플리케이션 계층과 네트워크 계층에 대해 각각 보안 강화(Hardening)를 하는 것입니다.
 
 - 어플리케이션 계층
 
-첫번째로 떠오르는 것은 입력값 검증(Input Validation)일 것입니다. 여기서 Orange Tsai는 화이트리스트 기반의 입력값 검증방법을 제안한다. 
+첫번째로 떠오르는 것은 입력값 검증(Input Validation)일 것입니다. 여기서 Orange Tsai는 화이트리스트 기반의 입력값 검증방법을 제안드립니다.
 
 내부 어플리케이션에 전송되는 요청은 아래의 정보로 구성됩니다.
 
@@ -89,6 +113,12 @@ SSRF 는 CSRF 와 유사한 공격 방식입니다. CSRF는 클라이언트로 �
 - IP 주소 정보
 - 도메인 이름
 - URL 정보
+
+각각의 정보에 대한 유효성 검증을 구현하는 방법을 간략히 소개해 드리겠습니다.
+
+<br>
+{% include advertisements.html %}
+<br>
 
 ### 문자열
 
@@ -102,6 +132,10 @@ if(Pattern.matches("[a-zA-Z0-9\\s\\-]{1,50}", userInput)){
     // 그렇지 않을 경우 요청을 거절하고 처리를 중지
 }
 ```
+
+<br>
+{% include advertisements.html %}
+<br>
 
 ### 아이피 주소
 
@@ -121,6 +155,10 @@ SSRF 관점에서 아이피 주소 데이터에 대해 아래의 검증이 필�
 |Ruby|[IPAddr 모듈](https://ruby-doc.org/stdlib-2.0.0/libdoc/ipaddr/rdoc/IPAddr.html)|SDK 문서를 참조|
 
 위에서 언급한 라이브러리를 사용하여 출력된 결과 값을 IP 주소로 사용합니다. 그리고 화이트리스트 목록과 비교하여 유효성 검증을 할 경우 안전성이 높아집니다.
+
+<br>
+{% include advertisements.html %}
+<br>
 
 ### 도메인 이름
 
@@ -193,7 +231,7 @@ import ipaddress
 import dns.resolver
 
 # 도메인 화이트리스트 구성
-DOMAINS_WHITELIST = ["owasp.org", "labslinux"]
+DOMAINS_WHITELIST = ["codemachina.com", "code.machina.com"]
 
 # DNS 질의를 전달할 DNS Resolver 를 구성
 DNS_RESOLVER = dns.resolver.Resolver()
@@ -230,8 +268,8 @@ def check():
     """
     error_detected = False
     for domain in DOMAINS_WHITELIST:    
-        # Get the IPs of the curent domain
-        # See https://en.wikipedia.org/wiki/List_of_DNS_record_types
+        # 현재 도메인의 아이피를 얻는다.
+        # 링크 참조: https://en.wikipedia.org/wiki/List_of_DNS_record_types
         try:
             # A = IPv4 address record        
             ip_v4_records = DNS_RESOLVER.query(domain, "A")
@@ -244,7 +282,7 @@ def check():
         except Exception as e:
             ip_v6_records = None
             print("[i] Cannot get AAAA record for domain '%s': %s\n" % (domain,e))
-        # Verify the IPs obtained
+        # IP 주소를 검증합니다.
         if verify_dns_records(domain, ip_v4_records, "A") 
         or verify_dns_records(domain, ip_v6_records, "AAAA"):
             error_detected = True
@@ -259,10 +297,17 @@ if __name__== "__main__":
         exit(0)
 ```
 
+<br>
+{% include advertisements.html %}
+<br>
 
 ### URL
 
 **URL 정보를 입력값으로 받아들이는 경우는 지양해야합니다**. 이는, URL 을 검증하는 과정이 매우 어렵고 파서를 악용할 가능성이 높기 때문입니다. 만약 네트워크 정보가 필요하다면, 유효한 IP 주소 또는 도메인 이름을 검증하도록 구현합니다.
+
+<br>
+{% include advertisements.html %}
+<br>
 
 ### 네트워크 계층
 
@@ -278,7 +323,7 @@ if __name__== "__main__":
 {% include advertisements.html %}
 <br>
 
-## 사례 2
+## 사례 2 : 외부 서버와 통신
 
 **사례1**의 내용이 길다보니 사례2의 내용을 상기해 보도록 하겠습니다.
 
@@ -287,26 +332,127 @@ if __name__== "__main__":
 아래의 사항을 유념해 주세요.
 
 - 기업 내부 네트워크에 소속된 IP와 도메인을 대상으로 하지 않음
-- 어플리케이션과 IP/도메인 사이에 정의된 규칙을 따릅니다.
-
-### 어플리케이션 계층에서 URL 차단
-
-
-
-
-
-
-## 마무리
-
-드디어 Vue.js 공식 문서 정복(뽀개기) 과정에서 Vue 인스턴스 영역이 완료되었습니다! 👏 (짝짝짝) 이 과정은 모든 문서를 정복할 때까지 매일 매일 업로드 하도록 할테니 내일 이 시간에도 시간을 내어 [코마의 훈훈한 블로그](https://code-machina.github.io) 를 찾아주세요!
+- 어플리케이션과 IP/도메인 사이에 정의된 규칙을 따름
 
 <br>
 {% include advertisements.html %}
 <br>
 
-다음 시간에는 `템플릿 문법`을 완벽하게 이해하실 수 있도록 정리해보도록 하겠습니다.
+### 어플리케이션 계층에서 URL 차단
 
-아직 드릴 이야기가 무궁무진하니 좀 더 지켜봐주시면 더욱 감사할 것 같아요! 여러분이 Vue.js 를 장난감처럼 가지고 노는 그날까지 저 **코마**는 멈추지 않겠습니다. 대한민국 IT인 여러분들의 건승을 기원합니다.
+외부 도메인 혹은 아이피 주소와 통신하므로 화이트리스트 접근 방법은 유효한 해결책이 아닙니다. 블랙리스트 접근법이 완벽한 차단 능력을 제공하진 않지만, 지금 상황에서는 가장 훌륭한 솔루션입니다. 
+
+그러나, 어플리케이션 계층에서 URL 을 필터링하는 것은 매우 어려운일에 속합니다.
+
+- 코드 레벨에서 Private 네트워크 영역 인지를 체크해야합니다.
+  - 모든 SDK 가 이러한 기능을 자체적으로 제공해주지 않습니다. 즉, 개발자의 몫임을 의미합니다.
+- 조직은 내부 도메인 이름 목록을 관리해야 합니다. 
+  - 이를 통해 어플리케이션이 도메인 이름이 내부 주소인지를 체크할 수 있습니다.
+  - 또한, 유효성 검증을 통해 내부 DNS 리졸버를 이용가능해야 하며 쿼리가능한 도메인은 내부 도메인에만 한정합니다. **즉, 외부 도메인 이름을 리졸브하지 않아야 합니다.**
+
+<br>
+{% include advertisements.html %}
+<br>
+
+### 어플리케이션 계층
+
+**사례 1: 신뢰 관곅란 통신** 절에서 언급한 내용과 같이 어플리케이션에 발송될 요청을 생성하는데, IP 주소와 도메인 이름이 필요합니다.
+
+URL, 네트워크 계층, 도메인 이름, 문자열의 데이터 타입에 대해 유효성을 검증하는 과정을 동일하지만, 화이트리스트가 아닌 블랙리스트 방식으로 접근하는 부분에서는 차이점이
+
+그렇다면 유효성 검증 흐름을 알아볼까요?
+
+### 유효성 검증 흐름
+
+아래의 Numbered List 에서 각 단계의 유효성 검증에 실패할 경우 요청을 거절되도록 구성하여야 합니다.
+
+1. 어플리케이션은 통신할 어플리케이션의 도메인 이름 혹은 아이피 주소를 수신합니다. 그리고 입력 값에 대한 유효성 검증을 정규표현식등의 방법으로 수행합니다.
+2. 두 번째 유효성 검증은 아이피 주소 또는 도메인 이름에 대해 수행됩니다. 각 데이터 유형에 따라 아래 하위 목록의 블랙리스트  접근 방식을 따릅니다.
+  - 아이피 주소
+    - 공인 아이피 주소인지를 확인합니다. (사설 아이피 주소인 경우 유효성 검증을 실패처리합니다.)
+  - 도메인 이름
+    - 도메인 이름 리졸브 작업을 통해 공인 아이피인지를 검증합니다. 이때 위에서 언급한것 처럼 DNS 리졸버가 내부 도메인만을 처리하도록 하는 것을 잊지 말아야 합니다. 따라서, 외부 도메인을 사용할 경우 조회가 되지 않습니다. (**조회가 되지 않는 것이 정상입니다.**)
+    - `DNS Pinning` 공격을 방지하기 위해서는 A, AAAA 레코드를 조회하여 도메인 이름의 모든 아이피 주소를 가져와야 합니다.
+3. 입력 값에서 프로토콜에 대한 정보를 담은 파라미터에 대해 허용된 프로토콜 목록에 포함되는지를 검증하는 과정이 필요하다.
+4. 입력 값을 통해 파라미터 이름 정보를 받아오는 경우 유효한 캐릭터 집합에 포함되는지를 체크한다. 
+  - `[a-z]{1,10}` 와 같은 규칙을 설정한다. (소문자, 1~10 길이)
+5. 입력 값을 통해 토큰 정보를 수신하는 경우 Alphanumeric 이며 길이 20인지를 체크 한다.
+6. 보안 관점에서 비즈니스 데이터를 입력 받을 때 유효한 검증을 수행한다.
+7. HTTP 의 POST 요청을 구성하여 전송할 때 검증된 정보만을 사용하도록 한다. 그리고 이를 전송하는 클라이언트는 반드시 Redirection 을 비활성화한다.
+
+### 블랙리스트 구현 샘플
+
+위에서 언급한 바와 같이 모든 SDK가 아이피의 사설/공인인지를 검증하는 기능을 내장하지 않는다고 언급하였습니다.
+
+아래의 코드는 사설아이피를 검증하는 샘플 코드입니다. 아래와 같은 형태의 구현은 사설 아이피에 대한 블랙리스트 검증 방식에 유용하게 사용될 수 있습니다.
+
+```python
+def is_private_ip(ip_address):
+    is_private = False
+    """
+    Determine if a IP address provided is a private one.
+    Return TRUE if it's the case, FALSE otherwise.
+    """
+    # Build the list of IP prefix for V4 and V6 addresses
+    ip_prefix = []
+    # Add prefix for loopback addresses
+    ip_prefix.append("127.")    
+    ip_prefix.append("0.")    
+    # Add IP V4 prefix for private addresses
+    # See https://en.wikipedia.org/wiki/Private_network
+    ip_prefix.append("10.")
+    ip_prefix.append("172.16.")
+    ip_prefix.append("172.17.")
+    ip_prefix.append("172.18.")
+    ip_prefix.append("172.19.")
+    ip_prefix.append("172.20.")
+    ip_prefix.append("172.21.")
+    ip_prefix.append("172.22.")
+    ip_prefix.append("172.23.")
+    ip_prefix.append("172.24.")
+    ip_prefix.append("172.25.")
+    ip_prefix.append("172.26.")
+    ip_prefix.append("172.27.")
+    ip_prefix.append("172.28.")
+    ip_prefix.append("172.29.")
+    ip_prefix.append("172.30.")
+    ip_prefix.append("172.31.")
+    ip_prefix.append("192.168.")
+    ip_prefix.append("169.254.")
+    # Add IP V6 prefix for private addresses
+    # See https://en.wikipedia.org/wiki/Unique_local_address
+    # See https://en.wikipedia.org/wiki/Private_network
+    # See https://simpledns.com/private-ipv6
+    ip_prefix.append("fc")
+    ip_prefix.append("fd")
+    ip_prefix.append("fe")
+    ip_prefix.append("ff")
+    ip_prefix.append("::1")
+    # Verify the provided IP address
+    # Remove whitespace characters from the beginning/end of the string 
+    # and convert it to lower case 
+    # Lower case is for preventing any IPV6 case bypass using mixed case
+    # depending on the source used to get the IP address
+    ip_to_verify = ip_address.strip().lower()
+    # Perform the check against the list of prefix
+    for prefix in ip_prefix:
+        if ip_to_verify.startswith(prefix):
+            is_private = True
+            break
+    return is_private
+``` 
+
+## 마무리
+
+지금까지 SSRF(Server Side Request Forgery) 예방법에 대해서 알아보았습니다. 👏👏👏 (짝짝짝) 이 내용을 통해 직접 구현 예제를 찾지 않더라도 어떠한 벡터로 인해 취약점이 발생할 수 있는지를 이해할 수 있는 시간이었습니다. MSA 아키텍처가 대세로 자리잡고 대규모 서비스를 효율적으로 운영하기 위한 고민의 시간을 무색하게 하는 SSRF 공격을 효과적으로 차단하기 위해서는 공격을 이해하려는 노력이 선행되어야 한다고 감히 주창합니다. 
+
+앞으로도 개발자분들의 머리를 아프게 하는 보안 이슈들을 풀어낼 예정이니 많은 참고 부탁드립니다. 내일 이 시간에도 [코마의 훈훈한 블로그](https://code-machina.github.io) 를 찾아주시길 바랍니다.
+
+<br>
+{% include advertisements.html %}
+<br>
+
+아직 드릴 이야기가 무궁무진하니 좀 더 지켜봐주시면 더욱 감사할 것 같아요! 대한민국에서 보안사고가 발생하지 않는 그날까지 저 **코마**는 멈추지 않겠습니다. 대한민국 보안人의 건승을 기원합니다.
 
 지금까지 **코마** 였습니다.
 
@@ -317,6 +463,12 @@ if __name__== "__main__":
 이번 시간에 참조한 링크는 아래와 같습니다. 잘 정리하셔서 필요할 때 사용하시길 바랍니다.
 
 - [Vue.js 2.x : Guide Docs](https://vuejs.org/v2/guide/index.html)
+- [SSRF Bible](https://docs.google.com/document/d/1v1TkWZtrhzRLy0bYXBcdLUedXGb9njTNIJXa3u9akHM)
+- [Bypassing SSRF Prevention](https://medium.com/@vickieli/bypassing-ssrf-protection-e111ae70727b)
+- [Part1 - SSRF Attacks](https://medium.com/poka-techblog/server-side-request-forgery-ssrf-attacks-part-1-the-basics-a42ba5cc244a)
+- [Part2 - SSRF Attacks](https://medium.com/poka-techblog/server-side-request-forgery-ssrf-attacks-part-2-fun-with-ipv4-addresses-eb51971e476d)
+- [Part3 - SSRF Attacks](https://medium.com/poka-techblog/server-side-request-forgery-ssrf-part-3-other-advanced-techniques-3f48cbcad27e)
+- [DNS Pinning](https://cheatsheetseries.owasp.org/assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_SSRF_Bible.pdf)
 
 <br>
 {% include advertisements.html %}

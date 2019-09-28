@@ -28,9 +28,17 @@
           <button type="submit">Search</button>
         </form>  -->
     </div>
+    <div class="cm-mob-toggle-menu">
 
+    </div>
     {%- if page_paths -%}
     <div class="cm-topnav">
+      <label for="show-menu" class="show-menu hamburger">
+        <div class="top-bun"></div>
+        <div class="meat"></div>
+        <div class="bottom-bun"></div>
+      </label>
+      <input type="checkbox" id="show-menu" role="button">      
       {%- for path in page_paths -%}
         {%- assign my_page = site.pages | where: "path", path | first -%}
         {%- if my_page.title -%}

@@ -97,6 +97,10 @@
   // $primary: #0000FA;
   $primary: grey;
   $accent: #F5F6FD;
+
+  ::placeholder {
+    color: red;
+  }
   
   .container-search {
     width: 100%;
@@ -313,6 +317,119 @@
       color: #424242;
       &:visited {
         color: #424242;
+      }
+    }
+
+    /**
+      Hamburger Menu
+    **/
+    .hamburger {
+      // position: absolute;
+      // top: 5em;
+      // right: 5%;
+      // margin-left: -2em;
+      // margin-top: -45px;
+      align-content: center;
+      margin: 0 auto; 
+    }
+
+    .hamburger div {
+      // position: relative;
+      width: 3em;
+      height: 7px;
+      border-radius: 3px;
+      background-color: #000000;
+      margin-top: 8px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    #show-menu:checked + .hamburger .top-bun {
+      transform: rotate(-45deg);
+      margin-top: 25px;
+    }
+    #show-menu:checked + .hamburger .bottom-bun {
+      opacity: 0;
+      transform: rotate(45deg);
+    }
+    #show-menu:checked + .hamburger .meat {
+      transform: rotate(45deg);
+      margin-top: -7px;
+    }
+    
+    #show-menu:checked + .hamburger + .nav {
+      top: 0;
+      transform: scale(1);
+    }
+
+    .show-menu {
+      display: none;
+    }
+
+    /*Hide checkbox*/
+    input[type=checkbox]{
+      display: none;
+    }
+
+    @include for-phone-only {
+      /*Make dropdown links appear inline*/
+      flex-direction: column;
+      .nav-item {
+        // position: static;
+        display: none;
+      }
+      .show-menu {
+        display: block;
+      }
+      /*Show menu when invisible checkbox is checked*/
+      input[type=checkbox]:checked ~ .nav-item{
+        display: block;
+        // .cm-topnav {
+        //   display: block;
+        // }
+        // .nav-item {
+        //   display: block;
+        // }
+
+      }
+      
+      // /*Create vertical spacing*/
+      // /*Make all menu links full width*/
+      // .nav-item a {
+      //     width: 100%;
+      // }
+      // /*Display 'show menu' link*/
+
+    }
+    // Device 별 Width(폭) 조정
+    @include for-tablet-portrait-up {
+      /*Make dropdown links appear inline*/
+      // .nav-item {
+      //   position: static;
+      //   display: none;
+      // }
+      // /*Create vertical spacing*/
+      // .nav-item {
+      //     margin-bottom: 1px;
+      // }
+      // /*Make all menu links full width*/
+      // .nav-item a {
+      //     width: 100%;
+      // }
+      // /*Display 'show menu' link*/
+      // .show-menu {
+      //     display:block;
+      // }
+    }
+
+    @include for-tablet-landscape-up {
+      display: flex;
+      justify-content: space-between;
+      a {
+        text-decoration: none;
+        color: #424242;
+        &:visited {
+          color: #424242;
+        }
       }
     }
   }

@@ -242,7 +242,12 @@
     }
   }
 
-  
+  @include for-phone-only {
+    height: 36px;
+    .container-search {
+      display: none; // hide Search bar
+    }
+  }
   // Device 별 Width(폭) 조정
   @include for-tablet-portrait-up {
     height: 36px;

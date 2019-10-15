@@ -1,10 +1,10 @@
 ---
 layout: post
 title:  "쉽게 다가가는 Vue.js 이야기 (파트 9)"
-subtitle: "목차로 알아보는 Vue.js 의 초단간 개요: 컴포넌트 기본 (2)"
+subtitle: "목차로 알아보는 Vue.js 의 초단간 개요: 리스트 렌더링"
 author: "코마 (gbkim1988@gmail.com)"
 date:   2019-10-04 00:00:00 +0900
-categories: [ "vue.js", "node.js", "component", "basic", "sytax", "10m"]
+categories: [ "vue.js", "node.js", "list rendering", "basic", "sytax", "10m"]
 excerpt_separator: <!--more-->
 ---
 

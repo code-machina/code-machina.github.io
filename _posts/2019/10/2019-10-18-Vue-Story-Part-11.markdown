@@ -3,7 +3,7 @@ layout: post
 title:  "쉽게 다가가는 Vue.js 이야기 (파트 11, 마지막)"
 subtitle: "목차로 알아보는 Vue.js 의 초단간 개요: 폼 입력 바인딩(Form Input Bindings"
 author: "코마 (gbkim1988@gmail.com)"
-date:   2019-10-04 00:00:00 +0900
+date:   2019-10-18 00:00:00 +0900
 categories: [ "vue.js", "node.js", "Form Input Bindings", "basic", "sytax", "10m"]
 excerpt_separator: <!--more-->
 ---
@@ -67,6 +67,10 @@ CJK (Chinese, Japanese, Korean) 언어를 입력 시 IME (Input Method Editor)�
 - [IME 란?](https://en.wikipedia.org/wiki/Input_method)
 
 IME 를 통해서 데이터를 입력할 경우 v-model 은 작성 완료 전까지 업데이트 되지 않습니다. 만약 이러한 동작 방식을 여러분의 구미에 맞게 수정하려면 input 이벤트를 통해 조정이 가능합니다.
+
+<br>
+{% include advertisements.html %}
+<br>
 
 ## 코드 샘플
 
@@ -134,6 +138,8 @@ new Vue({
 
 - Select 컨트롤 샘플
 
+> **ℹ INFO**: 아래의 샘플 코드에서 `disabled` 가 눈에 들어온다면, 제대로 코드를 읽어낸 것입니다. select 의 v-model 과 맵핑된 `selected` 가 옵션(option) 중 어느 것과도 일치하지 않는다면 `unselected` 상태로 렌더링 될 것입니다. 그러나, iOS 에서는 이러한 상태로 둘 경우 사용자는 어떠한 선택도 할 수 없으며 change 이벤트 또한 발생하지 않습니다. 따라서, 아래와 같이 disabled 옵션이 부여된 option 엘리먼트를 추가하고 여기에 empty 값(`value=""`)을 할당하는 것이 좋습니다.
+
 ```html
 <select v-model="selected">
   <option disabled value="">Please select one</option>
@@ -153,7 +159,52 @@ new Vue({
 })
 ```
 
+- 다중 Select 컨트롤 샘플
 
+
+```html
+<select v-model="selected" multiple>
+  <option>A</option>
+  <option>B</option>
+  <option>C</option>
+</select>
+<br>
+<span>Selected: {{ selected }}</span>
+```
+
+```js
+new Vue({
+  el: '...',
+  data: {
+    selected: ''
+  }
+})
+```
+
+- 동적 Select 컨틀롤 샘플
+
+```html
+<select v-model="selected">
+  <option v-for="option in options" v-bind:value="option.value">
+    {{ option.text }}
+  </option>
+</select>
+<span>Selected: {{ selected }}</span>
+```
+
+```js
+new Vue({
+  el: '...',
+  data: {
+    selected: 'A',
+    options: [
+      { text: 'One', value: 'A' },
+      { text: 'Two', value: 'B' },
+      { text: 'Three', value: 'C' }
+    ]
+  }
+})
+```
 
 {% endraw %}
 
@@ -161,11 +212,96 @@ new Vue({
 {% include advertisements.html %}
 <br>
 
+## 값 바인딩(Value Binding)
+
+라디오 버튼, 체크 박스 그리고 select 옵션은 v-model 을 통해서 바인딩할 경우 보통 정적인 문자열(static strings)입니다. (체크 박스의 경우는 boolean 타입입니다.)
+
+그러나 때로는 이러한 값을 동적인 속성과 바인딩 하고 싶어질 때가 있습니다. 이러한 경우 사용할 수 있는 옵션이 바로 v-bind 디렉티브입니다. 즉, v-bind 를 사용하면 입력 값이 문자열 타입이 아니어도 바인딩할 수 있습니다.
+
+아래의 케이스를 살펴볼까요?
+
+### 라디오 버튼
+
+아래의 코드는 radio 버튼의 선택 시 바인딩된 value 가 `a` 이며, v-model 에 바인딩된 pick 에 그대로 맵핑됨을 보여줍니다.
+
+```html
+<input type="radio" v-model="pick" v-bind:value="a">
+```
+
+그리고 이 둘의 값은 같게 됩니다. 
+
+```js
+// when checked:
+vm.pick === vm.a
+```
+### Select 옵션 컨트롤
+
+이번에는 option 엘리먼트의 값을 바인딩한 케이스입니다. inline object literal 이 사용되었습니다.
+
+```html
+<select v-model="selected">
+  <!-- inline object literal -->
+  <option v-bind:value="{ number: 123 }">123</option>
+</select>
+```
+
+그리고 선택할 경우 객체가 `selected` 에 맵핑되며 속성에 접근하여 데이터에 엑세스할 수 있습니다.
+
+```js
+// when selected:
+typeof vm.selected // => 'object'
+vm.selected.number // => 123
+```
+
+## 한정자(Modifier)
+
+우리는 한정자를 통헤서 이벤트의 발생을 제어할 수 있다고 이전 시간에 배웠습니다. 잠시 prevent 와 passive 의 예시를 상기시켜볼까요?
+
+마찮가지로 v-model 에도 이러한 한정자(Modifier)를 사용하여 이벤트 발생에 개입할 수 있습니다. 또한, 입력되는 데이터를 쉽게 보정할 수 있습니다.
+
+### .lazy modifier
+
+기본값으로 v-model 은 input 이벤트 마다 데이터와 입력값을 동기화(*Syncing)하는 절차를 거칩니다. 여기에 lazy 한정자를 추가하면 동기화는 change 이벤트마다 발생하게 됩니다.
+
+> **⚠ 주의**: IME(Input Method Editor)를 사용하는 CJK 언어의 경우는 예외입니다.
+
+```html
+<!-- input 이벤트 대신에 change 이벤트 발생 시 동기화(syncing)됩니다. -->
+<input v-model.lazy="msg" >
+```
+
+### .number modifier
+
+만약 여러분이 입력 값의 데이터를 곧바로 number 타입으로 캐스팅한다고 한다면 어떻게 할까요? 보통 타입 캐스팅 로직을 어딘가에 두어야 합니다. 그러나 Vue 는 이러한 구현을 좀 더 용이하게 하도록 배려합니다. 아래의 샘플을 볼까요?
+
+만약에 여러분이 입력한 값이 숫자 형태가 아니더라도 원래 입력한 값을 출력하므로 오류의 걱정은 없습니다. 제출 전에 보정하는 로직을 넣어두면 됩니다.
+
+```html
+<input v-model.number="age" type="number">
+```
+
+### .trim modifier
+
+trim 은 여러분이 문자열 데이터를 보정할 때 주로 사용하는 키워드입니다. strip, trim 등을 주로 떠올립니다. 마찮가지로 .trim 한정자 또한 동일한 역할을 해줍니다. 그리고 더욱 효율적입니다.
+
+```html
+<input v-model.trim="msg">
+```
+
+<br>
+{% include advertisements.html %}
+<br>
+
+
 ## 마무리
 
-드디어 Vue.js 공식 문서 정복(뽀개기) 과정에서 이벤트 핸들링이 완료되었습니다! 👏 (짝짝짝) 또한, 이 과정은 모든 문서를 정복할 때까지 매일 매일 업로드 하도록 할테니 내일 이 시간에도 시간을 내어 [코마의 훈훈한 블로그](https://code-machina.github.io) 를 찾아주세요!
+드디어 Vue.js 공식 문서 정복(뽀개기) 과정에서 **폼 입력 바인딩**이 완료되었습니다! 👏 (짝짝짝) 내일 이 시간에도 시간을 내어 [코마의 훈훈한 블로그](https://code-machina.github.io) 를 찾아주세요!
 
-다음 시간에는 **Vue 스토리의 마지막인 폼 입력 바인딩(Form Input Binding)**을 완벽하게 이해하실 수 있도록 정리해보도록 하겠습니다.
+**Vue 의 기본을 다루는 모든 이야기가 완료되었습니다.**👏 (짝짝짝) 다음 시간에는 잠시 다른 이야기를 다룬 뒤에 실전에서 Vue를 다룰 수 있도록 하는 시간을 가져보도록 하겠습니다. 
+
+실전 웹 사이트는 11월 중순부터 오픈될 예정이니 인내심을 가지고 기다려주세요. 또한, Server-less 구현을 통해 깃헙을 통해서도 다양한 방식의 구현이 가능함을 보여드리도록 하겠습니다.
+
+- [코마의 Vue Awesome](https://code-machina.github.io/coma-vue-awesome/#/readme)
 
 아직 드릴 이야기가 무궁무진하니 좀 더 지켜봐주시면 더욱 감사할 것 같아요! 여러분이 Vue.js 를 장난감처럼 가지고 노는 그날까지 저 **코마**는 멈추지 않겠습니다. 대한민국 IT인 여러분들의 건승을 기원합니다.
 

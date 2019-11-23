@@ -25,6 +25,8 @@ group :jekyll_plugins do
   gem "bourbon"
   gem "rouge"
   # gem "jekyll-toc"
+  gem 'jekyll-commonmark-ghpages'
+
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

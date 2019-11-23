@@ -23,11 +23,14 @@ twitter_username: gbkim1988
 github_username:  code-machina
 
 # Build settings
-markdown: kramdown
+markdown: CommonMarkGhPages
+# markdown: kramdown
 highlighter: rouge
+commonmark:
+  options: ["SMART", "FOOTNOTES"]
+  extensions: ["strikethrough", "autolink"]
 kramdown:
-  input: GFM
-  syntax_highlighter: rouge
+  parse_block_html: true
 theme: minima
 plugins:
   - jekyll-feed

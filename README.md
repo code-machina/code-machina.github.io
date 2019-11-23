@@ -2,9 +2,21 @@
 
 Minima 를 기반으로 커스터마이징 중인 Jekyll 블로그입니다.
 
+## Mac OS
+
+맥 os 를 사용하시는 분들은 아래의 가이드를 따라 실행합니다.
+
+```bash
+sudo gem install bundler
+bundle install
+bundle exec jekyll serve --drafts
+```
+
 ## Change Log
 
 - 2019
+  - Nov 23 : 부분 영어 제공 시작
+    - foldable 기능을 제공하기 위해 kramdown 에서 CommonMarkGhPages 를 추가[stackoverflow 가이드 참고](https://stackoverflow.com/a/52962330/8536042)
   - July 26 : ToC SASS 수정 및 구글 광고 사이드바 설정
   - Aug 08 : ToC 및 Content CSS 조정
 
